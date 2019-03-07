@@ -8,7 +8,10 @@ Main Token(ERC-20):YCY(http://tokenfactory.surge.sh/#/token/0x516Ee66b9C938eDB7d
 ## What is YCY Wechat Robot?
 
 YCY Wechat Robot just like Microsoft XiaoBing, but it can be more personalized.
-Every morning when you check Wechat, you will find YCY quote of the day in it. At the same time, you can chat with YCY Wechat Robot just like chat with YCY herself. This Robort can answer in YCY's way, sing in YCY's way, which means it could be kind of **atrocious**, but who cares, all we need is YCY. YCY is amazing just the way she is.
+
+Every morning when you check Wechat, you will find YCY quote of the day in it. 
+
+At the same time, you can chat with YCY Wechat Robot just like chat with YCY herself. This Robort can answer in YCY's way, sing in YCY's way, which means it could be kind of **atrocious**, but who cares, all we need is YCY. YCY is amazing just the way she is.
 
 ## What is YCY Token?
 
