@@ -22,7 +22,7 @@ YCY Token is kind of cryptocurrency you can use in our platform. With the develo
 ## Features
 
 - random YCY picture (wf1314[3.7 => 3.8])
-
+- level name()
 ## Getting Started
 
 ## Logs
