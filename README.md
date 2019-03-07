@@ -1,8 +1,9 @@
 # YCY Wechat Robot supported Cryptocurrency
 YCY(YangChaoyue) Wechat Robot supported Cryptocurrency(blockchain), coding in Python. (ﾟДﾟ)y─┛
 
-**Contributer: ** wf1314
-**Creater's Wechat ID: ** 197626581
+**Contributer:** wf1314
+
+**Creater's Wechat ID:** 197626581
 
 Main Token(ERC-20):YCY(http://tokenfactory.surge.sh/#/token/0x516Ee66b9C938eDB7d9a3f93C1e454e832932883)
 
@@ -20,7 +21,7 @@ YCY Token is kind of cryptocurrency you can use in our platform. With the develo
 
 ## Features
 
-- random YCY picture (wf1314)
+- random YCY picture (wf1314[3.7 => 3.8)
 
 ## Getting Started
 
