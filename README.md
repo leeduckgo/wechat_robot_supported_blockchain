@@ -8,6 +8,8 @@ Main Token(ERC-20):YCY(http://tokenfactory.surge.sh/#/token/0x516Ee66b9C938eDB7d
 
 ## What is YCY Token?
 
+## Features
+
 ## Getting Started
 
 ## Logs
