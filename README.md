@@ -1,5 +1,5 @@
 # YCY Wechat Robot supported Cryptocurrency
-ycy(YangChaoyue) wechat robot supported cryptocurrency(blockchain), coding in Python. (ﾟДﾟ)y─┛
+YCY(YangChaoyue) Wechat Robot supported Cryptocurrency(blockchain), coding in Python. (ﾟДﾟ)y─┛
 
 Creater's Wechat ID: **197626581**
 
