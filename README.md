@@ -11,3 +11,5 @@ Main Token(ERC-20):YCY(http://tokenfactory.surge.sh/#/token/0x516Ee66b9C938eDB7d
 ## Getting Started
 
 ## Logs
+
+- [20180307] Create Group for this project
