@@ -28,4 +28,4 @@ YCY Token is kind of credit you can use in our platform. With the development of
 ## Logs
 
 - [20180307] Create Group for this project
-- [20180308] Basic struct of this project
+- [20180308] Basic struct of this project & random ycy picture
