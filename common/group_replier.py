@@ -1,28 +1,26 @@
 from random import choice
-from wxpy import Bot
-import os
-from common.logger import Logger
 from settings import PROJECT_PATH, GTOUP1
+import os
 
-bot = Bot()
-group = bot.groups().search(GTOUP1)[0]
-log = Logger()
-list_dir = os.listdir(os.path.join(PROJECT_PATH, 'pics'))
-
-
-def random_img():
-    """随机获取图片"""
-    global list_dir
-    path = choice(list_dir)
-    log.info('choose:-->{}'.format(path))
-    return os.path.join(PROJECT_PATH, "pics", path)
+class Replier():
+    def __init__(self, bot, list_dir, logger):
+        self.bot = bot
+        self.group = self.bot.groups().search(GTOUP1)[0]
+        self.log = logger
+        self.list_dir = list_dir
 
 
-@bot.register(group)
-def reply_group(msg):
-    """群组消息回复"""
-    global group
-    log.info(msg)
-    if str.find(msg.text, "随机超越") != -1:
-        path = random_img()
-        group.send_image(path)
+    def random_img(self):
+        """随机获取图片"""
+        path = choice(self.list_dir)
+        self.log.info('choose:-->{}'.format(path))
+        return os.path.join(PROJECT_PATH, "pics", path)
+
+    def handle_msg(self, msg):
+        self.log.info(msg)
+        if str.find(msg.text, "随机超越") != -1:
+            path = self.random_img()
+            self.group.send_image(path)
+        if str.find(msg.text, "燃烧") != -1:
+            return "燃烧我的卡路里！"
+
