@@ -16,11 +16,16 @@ class Replier():
         self.log.info('choose:-->{}'.format(path))
         return self.list_dir
 
-    def handle_msg(self, msg):
+    def handle_msg(self, msg, tuling):
         self.log.info(msg)
         if str.find(msg.text, "随机超越") != -1:
             path = self.random_img()
             self.group.send_image(path)
         if str.find(msg.text, "燃烧") != -1:
             return "燃烧我的卡路里！"
+        if not msg.is_at:#如果没有@到机器人，不进行回应
+            return
+        else:
+            tuling.do_reply(msg)#@到机器人，则用图灵机器人进行回应
+
 
