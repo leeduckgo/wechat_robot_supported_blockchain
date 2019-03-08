@@ -23,6 +23,7 @@ print(members)
 # === main process ===
 @bot.register(group)
 def reply_group(msg):
+    print(msg)
     """群组消息回复"""
     replier = Replier(bot, group, list_dir, logger)
     replier.handle_msg(msg)
