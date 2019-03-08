@@ -30,7 +30,8 @@ class Logger(logging.Logger):
         filename = os.path.join(LOG_DIRECTORY, 'log.log')
 
         # 创建一个handler，用于写入日志文件 (每天生成1个，保留30天的日志)
-        fh = logging.handlers.TimedRotatingFileHandler(filename, 'MIDNIGHT', 1, 30, encoding='utf-8')
+        fh = logging.handlers.TimedRotatingFileHandler(
+            filename, 'MIDNIGHT', 1, 30, encoding='utf-8')
         fh.suffix = "%Y-%m-%d_%H-%M.log"
         fh.setLevel(const[LOG_LEVEL])
         # 再创建一个handler，用于输出到控制台

@@ -15,7 +15,7 @@ def random_img():
     global list_dir
     path = choice(list_dir)
     log.info('choose:-->{}'.format(path))
-    return os.path.join(PROJECT_PATH, "pics/", path)
+    return os.path.join(PROJECT_PATH, "pics", path)
 
 
 @bot.register(group)
