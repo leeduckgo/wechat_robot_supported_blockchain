@@ -14,12 +14,13 @@ class Replier():
         """随机获取图片"""
         path = choice(self.list_dir)
         self.log.info('choose:-->{}'.format(path))
-        return self.list_dir
+        return os.path.join("pics", path)
 
     def handle_msg(self, msg, tuling):
         self.log.info(msg)
         if str.find(msg.text, "随机超越") != -1:
             path = self.random_img()
+            print(path)
             self.group.send_image(path)
         if str.find(msg.text, "燃烧") != -1:
             return "燃烧我的卡路里！"
