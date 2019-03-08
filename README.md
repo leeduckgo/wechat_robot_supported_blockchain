@@ -21,9 +21,9 @@ YCY Token is kind of credit you can use in our platform. With the development of
 
 ## Features
 
-- random YCY picture (wf1314✅)
-- smart chat (3.8 => 3.15)
-- H5 (143777[3.8 => 3.15)
+- Random YCY picture (wf1314✅)
+- Smart chat (DawnSunshine[3.8 => 3.15])
+- H5 (143777[3.8 => 3.15])
 
 ## Getting Started
 
