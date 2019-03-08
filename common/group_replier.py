@@ -1,11 +1,11 @@
 from random import choice
-from settings import PROJECT_PATH, GTOUP1
+from settings import PROJECT_PATH
 import os
 
 class Replier():
-    def __init__(self, bot, list_dir, logger):
+    def __init__(self, bot, group, list_dir, logger):
         self.bot = bot
-        self.group = self.bot.groups().search(GTOUP1)[0]
+        self.group = group
         self.log = logger
         self.list_dir = list_dir
 
@@ -14,7 +14,7 @@ class Replier():
         """随机获取图片"""
         path = choice(self.list_dir)
         self.log.info('choose:-->{}'.format(path))
-        return os.path.join(PROJECT_PATH, "pics", path)
+        return self.list_dir
 
     def handle_msg(self, msg):
         self.log.info(msg)

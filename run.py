@@ -17,7 +17,7 @@ logger = Logger()
 @bot.register(group)
 def reply_group(msg):
     """群组消息回复"""
-    replier = Replier(bot, list_dir, logger)
+    replier = Replier(bot, group, list_dir, logger)
     replier.handle_msg(msg)
 
 embed()  # 阻塞线程不退出
