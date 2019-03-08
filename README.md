@@ -21,8 +21,8 @@ YCY Token is kind of credit you can use in our platform. With the development of
 
 ## Features
 
-- random YCY picture (wf1314[3.7 => 3.8])
-
+- random YCY picture (wf1314✅)
+- basic struct of this project (wf1314✅)
 ## Getting Started
 
 ## Logs
