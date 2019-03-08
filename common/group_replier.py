@@ -23,7 +23,7 @@ class Replier():
             print(path)
             self.group.send_image(path)
         if str.find(msg.text, "燃烧") != -1:
-            return "燃烧我的卡路里！"
+            self.group.send("燃烧我的卡路里！")
         if not msg.is_at:#如果没有@到机器人，不进行回应
             return
         else:
