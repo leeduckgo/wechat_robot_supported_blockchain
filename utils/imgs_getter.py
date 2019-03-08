@@ -3,6 +3,8 @@
 """
 import requests
 import json
+from settings import PROJECT_PATH
+import os
 
 
 class YCYImage(object):
@@ -12,7 +14,7 @@ class YCYImage(object):
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
             # "Content-Type": "application/x-www-form-urlencoded",
         }
-        
+
     def get_img(self):
         """获取100页的图片链接"""
         url = "https://www.duitang.com/napi/blog/list/by_search/"
@@ -35,11 +37,11 @@ class YCYImage(object):
     def download_img_and_save(self, result):
         """下载图片并保存"""
         if not result:
-            print('未爬取到图片')
             return
         for index, d in enumerate(result):
             r = requests.get(url=d['photo']['path'])
-            with open('pics/ycy_{}.jpg'.format(index), 'wb') as f:
+            file_name = os.path.join(PROJECT_PATH, "pics", "ycy_{}.jpg".format(index))
+            with open(file_name, 'wb') as f:
                 f.write(r.content)
 
     def run(self):
