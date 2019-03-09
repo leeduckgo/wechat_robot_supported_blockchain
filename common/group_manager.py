@@ -5,5 +5,5 @@ class Manager():
     def all_members(self):
         list = []
         for member in self.group.members:
-            list.append({"id": member.puid, "name": member.name})
+            list.append({"id": member.puid, "group_name": member.name, "wechat_name": member.nick_name})
         return list
