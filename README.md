@@ -22,7 +22,7 @@ YCY Token is kind of credit you can use in our platform. With the development of
 ## Features
 
 - Random YCY picture ([wf1314](https://github.com/wf1314)✅)
-- Http communication supported ([albertschr]((https://github.com/albertschr)✅)
+- Http communication supported ([albertschr](https://github.com/albertschr) ✅)
 - Smart chat ([DawnSunshine](https://github.com/DawnSunshine)[3.8 => 3.15])
 - H5 ([143777](https://github.com/143777)[3.8 => 3.15])
 
