@@ -11,7 +11,7 @@ from settings import PROJECT_PATH, GROUP1
 bot = Bot()
 bot.enable_puid()
 group = bot.groups().search(GROUP1)[0]
-list_dir = os.listdir(os.path.join(PROJECT_PATH, 'pics'))
+list_dir = os.listdir(os.path.join('resources', 'pics'))
 logger = Logger()
 tuling=Tuling(api_key='e889671fd22348528747941d7e563e02')
 manager = Manager(group)

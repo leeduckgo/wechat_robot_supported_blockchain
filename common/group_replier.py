@@ -14,7 +14,7 @@ class Replier(object):
         """随机获取图片"""
         path = choice(self.list_dir)
         self.log.info('choose:-->{}'.format(path))
-        return os.path.join("pics", path)
+        return os.path.join("resources","pics", path)
 
     def handle_msg(self, msg, tuling):
         self.log.info(msg)
