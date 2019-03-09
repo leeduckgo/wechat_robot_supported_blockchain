@@ -2,6 +2,7 @@
 from wxpy import embed,Bot,Tuling
 from common.group_replier import Replier # 导入即运行
 from common.group_manager import Manager
+from common.ycy_replier import YcyReplier
 import os
 from common.logger import Logger
 from settings import PROJECT_PATH, GROUP1
@@ -20,14 +21,15 @@ manager = Manager(group)
 
 members = manager.all_members()
 logger.info(members)
+ycy_replier = YcyReplier(logger)
+replier = Replier(bot, group, list_dir, logger, ycy_replier, tuling)
 
 # === main process ===
 @bot.register(group)
 def reply_group(msg):
     logger.info(msg)
-    """群组消息回复"""
-    replier = Replier(bot, group, list_dir, logger)
-    replier.handle_msg(msg, tuling)
+    """群组消息回复""" 
+    replier.handle_msg(msg)
 
+embed()  # 阻塞线程不退出'
 
-embed()  # 阻塞线程不退出
