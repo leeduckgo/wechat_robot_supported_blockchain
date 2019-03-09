@@ -16,7 +16,6 @@ class Replier(object):
         self.log.info('choose:-->{}'.format(path))
         return os.path.join("pics", path)
 
-<<<<<<< HEAD
     def handle_msg(self, msg, tuling):
         self.log.info(msg)
         if str.find(msg.text, "随机超越") != -1:
@@ -29,14 +28,3 @@ class Replier(object):
             return
         else:
             tuling.do_reply(msg)#@到机器人，则用图灵机器人进行回应
-
-=======
-    def handle_msg(self, msg):
-        if str.find(msg.text, "随机超越") != -1:
-            path = self.random_img()
-            self.log.debug(path)
-            self.group.send_image(path)
->>>>>>> upstream/master
-
-        # if str.find(msg.text, "燃烧") != -1:
-        #     return "燃烧我的卡路里！"
