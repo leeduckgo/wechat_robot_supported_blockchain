@@ -2,6 +2,7 @@ from random import choice
 from settings import PROJECT_PATH
 import os
 
+
 class Replier(object):
     def __init__(self, bot, group, list_dir, logger, ycy):
         self.bot = bot
@@ -37,3 +38,4 @@ class Replier(object):
                 self.group.send('@' + msg.member.display_name + ' ' + respond_msg)
             else:
                 self.group.send(tuling.reply_text(msg).replace("图灵机器人","超越宝宝"))#@到机器人，则用图灵机器人进行回应
+
