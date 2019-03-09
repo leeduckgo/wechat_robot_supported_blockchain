@@ -4,12 +4,13 @@ import os
 
 
 class Replier(object):
-    def __init__(self, bot, group, list_dir, logger, ycy):
+    def __init__(self, bot, group, list_dir, logger, ycy, tuling):
         self.bot = bot
         self.group = group
         self.log = logger
         self.list_dir = list_dir
         self.ycy = ycy
+        self.tuling = tuling
 
     def random_img(self):
         """随机获取图片"""
@@ -17,7 +18,7 @@ class Replier(object):
         self.log.info('choose:-->{}'.format(path))
         return os.path.join("resources","pics", path)
 
-    def handle_msg(self, msg, tuling):
+    def handle_msg(self, msg):
         self.log.info(msg)
         if msg.text == "天降超越":
             path = self.random_img()
@@ -32,10 +33,9 @@ class Replier(object):
         else:
             real_msg = msg.text.split()
             self.log.debug("send： "+real_msg[len(real_msg)-1])
-            respond_msg = self.ycy.do_reply(real_msg[len(real_msg)-1]) 
-            self.log.debug("member: " + msg.member.display_name)         
+            respond_msg = self.ycy.reply_text(real_msg[len(real_msg)-1])        
             if respond_msg :
                 self.group.send('@' + msg.member.display_name + ' ' + respond_msg)
             else:
-                self.group.send(tuling.reply_text(msg).replace("图灵机器人","超越宝宝"))#@到机器人，则用图灵机器人进行回应
+                self.group.send(self.tuling.reply_text(msg).replace("图灵机器人","超越宝宝"))#@到机器人，则用图灵机器人进行回应
 

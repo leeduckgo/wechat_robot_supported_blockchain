@@ -6,11 +6,11 @@ import jieba.analyse
 QA_dict = {}
 
 class YcyReplier(object):
-    def __init__(self):
+    def __init__(self, logger):
+        self.log = logger
+        '''训练QA样本，获得QA映射表'''
         csv_file = csv.reader(open(RESOURCES_PATH, 'r', encoding='UTF-8'))
         for QA in csv_file:
-            '''cut_words = jieba.cut(QA[0], cut_all = False)
-            print("分词结果： " + ", ".join(cut_words))'''
             tags = jieba.analyse.extract_tags(QA[0], topK=3)
             key = ''
             for tag in tags:
@@ -19,14 +19,14 @@ class YcyReplier(object):
                 QA_dict[key] = QA[1]
             else:
                 QA_dict[QA[0]] = QA[1]
-        print(QA_dict)
+        self.log.info("Dict:{}".format(QA_dict))
 
-
-    def do_reply(slef, msg):
+    def reply_text(self, msg):
         tags = jieba.analyse.extract_tags(msg, topK=3)
         key = ''
         for tag in tags:
             key += tag
+        self.log.info("KeyWords:{}".format(key))
         if(len(key)):
             if key in QA_dict:
                 return(QA_dict[key])
@@ -37,6 +37,3 @@ class YcyReplier(object):
                 return(QA_dict[msg])
             else:
                 return
-
-
-

@@ -21,14 +21,15 @@ manager = Manager(group)
 
 members = manager.all_members()
 logger.info(members)
-ycy_replier = YcyReplier()
-replier = Replier(bot, group, list_dir, logger, ycy_replier)
+ycy_replier = YcyReplier(logger)
+replier = Replier(bot, group, list_dir, logger, ycy_replier, tuling)
+
 # === main process ===
 @bot.register(group)
 def reply_group(msg):
     logger.info(msg)
     """群组消息回复""" 
-    replier.handle_msg(msg, tuling)
+    replier.handle_msg(msg)
 
 embed()  # 阻塞线程不退出'
 
