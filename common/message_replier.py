@@ -3,13 +3,17 @@ import os
 from wxpy import Tuling
 from common.logger import Logger
 from common.ycy_replier import YcyReplier
+from settings import TULING_KEY
+
 
 class Replier(object):
+    """消息回复"""
+
     def __init__(self):
         # self.group = group
         self.log = Logger()
         self.ycy = YcyReplier()
-        self.tuling = Tuling(api_key='e889671fd22348528747941d7e563e02')
+        self.tuling = Tuling(api_key=TULING_KEY)
 
     def random_img(self):
         """随机获取图片"""
@@ -19,6 +23,7 @@ class Replier(object):
         return os.path.join("resources", "pics", path)
 
     def handle_msg(self, msg):
+        """处理回复消息"""
         self.log.info(msg)
         if msg.text == "天降超越":
             path = self.random_img()
