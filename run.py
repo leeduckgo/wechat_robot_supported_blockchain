@@ -3,6 +3,7 @@ from wxpy import embed,Bot,Tuling
 from common.group_replier import Replier # 导入即运行
 from common.group_manager import Manager
 from common.ycy_replier import YcyReplier
+from common.rock_scissors_paper import RspGame
 import os
 from common.logger import Logger
 from settings import PROJECT_PATH, GROUP1
@@ -22,7 +23,8 @@ manager = Manager(group)
 members = manager.all_members()
 logger.info(members)
 ycy_replier = YcyReplier(logger)
-replier = Replier(bot, group, list_dir, logger, ycy_replier, tuling)
+rsp_game = RspGame(logger, 5)
+replier = Replier(bot, group, list_dir, logger, ycy_replier, tuling, rsp_game)
 
 # === main process ===
 @bot.register(group)
