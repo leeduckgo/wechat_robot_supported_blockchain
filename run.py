@@ -3,7 +3,7 @@ from wxpy import embed
 from wxpy import Bot
 from wxpy import User
 from wxpy import Group
-from common.message_replier import Replier  # 导入即运行
+from common.message_replier import Replier
 from common.logger import Logger
 
 
@@ -13,6 +13,7 @@ from common.logger import Logger
 bot = Bot(cache_path=True)  # 短时间内重启无需重新登录
 bot.enable_puid()
 logger = Logger()  # 单例模式下项目中只会创建一个logger对象
+replier = Replier()
 
 # === main process ===
 if __name__ == '__main__':
@@ -29,7 +30,6 @@ if __name__ == '__main__':
     def reply_message(msg):
         """消息回复"""
         if type(msg.sender) == Group:  # 所有群组消息
-            replier = Replier()
             typ, content = replier.handle_msg(msg)
             if typ == 'text':
                 msg.reply(content)
