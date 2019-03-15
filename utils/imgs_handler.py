@@ -68,8 +68,3 @@ def pic_to_cartoon(pic_path, save_path):
     img_cartoon = cv2.bitwise_and(img_color, img_edge)
     # 保存转换后的图片
     cv2.imwrite(imgOutput_FileName, img_cartoon)
-
-
-if __name__ == '__main__':
-    pic_to_handwork('test2.png', 'result.jpg')
-    pic_to_cartoon('test2.png', 'result1.jpg')
