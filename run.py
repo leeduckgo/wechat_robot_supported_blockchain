@@ -1,37 +1,41 @@
 # -*- coding: utf-8 -*-
-from wxpy import embed,Bot,Tuling
-from common.group_replier import Replier # 导入即运行
-from common.group_manager import Manager
-from common.ycy_replier import YcyReplier
-from common.rock_scissors_paper import RspGame
-import os
+
+from wxpy import embed
+from wxpy import Bot
+from wxpy import User
+from wxpy import Group
+from common.message_replier import Replier  # 导入即运行
 from common.logger import Logger
-from settings import PROJECT_PATH, GROUP1
 
 # === init ===
 
-bot = Bot()
+# bot = Bot(cache_path=True, console_qr=True)  # 控制台二维码
+bot = Bot(cache_path=True)  # 短时间内重启无需重新登录
 bot.enable_puid()
-group = bot.groups().search(GROUP1)[0]
-list_dir = os.listdir(os.path.join('resources', 'pics'))
-logger = Logger()
-tuling=Tuling(api_key='e889671fd22348528747941d7e563e02')
-manager = Manager(group)
-
-# === manager operation ===
-
-members = manager.all_members()
-logger.info(members)
-ycy_replier = YcyReplier(logger)
-rsp_game = RspGame(logger, 5)
-replier = Replier(bot, group, list_dir, logger, ycy_replier, tuling, rsp_game)
+logger = Logger()  # 单例模式下项目中只会创建一个logger对象
 
 # === main process ===
-@bot.register(group)
-def reply_group(msg):
-    logger.info(msg)
-    """群组消息回复""" 
-    replier.handle_msg(msg)
+if __name__ == '__main__':
 
-embed()  # 阻塞线程不退出'
+    # 自动接受新的好友请求
+    @bot.register(msg_types='Friends')
+    def auto_accept_friends(msg):
+        """接受好友请求"""
+        new_friend = msg.card.accept()
+        # 向新的好友发送消息
+        new_friend.send('你好呀,我是全村的希望!')  # todo 内容待定 附加功能介绍
 
+    @bot.register()
+    def reply_message(msg):
+        """消息回复"""
+        if type(msg.sender) == Group:  # 所有群组消息
+            replier = Replier()
+            typ, content = replier.handle_msg(msg)
+            if typ == 'text':
+                msg.reply(content)
+            elif typ == 'img':
+                msg.reply_image(content)
+        else:  # todo 私聊消息
+            logger.info(msg)
+
+    embed()  # 阻塞线程不退出'

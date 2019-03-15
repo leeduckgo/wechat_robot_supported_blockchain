@@ -1,6 +1,7 @@
 #1.增加不玩了退出功能 2.增加游戏计时退出功能 3.改成四种方式触发，超越猜拳、村花猜拳、剪刀石头布、石头剪刀布 4.玩游戏吧，列出已有的游戏列表
 import random
 from settings import GAME_IMAGE_PATH
+from common.logger import Logger
 
 #随机整数[1,3]决定机器人出招，分别为1：石头；2:剪刀；3：布
 class RspGame(object):

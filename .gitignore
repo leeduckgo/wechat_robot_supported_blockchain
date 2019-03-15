@@ -391,3 +391,5 @@ $RECYCLE.BIN/
 *.lnk
 
 .idea/
+wxpy.pkl
+wxpy_puid.pkl
