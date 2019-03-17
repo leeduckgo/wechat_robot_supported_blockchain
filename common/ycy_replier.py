@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from settings import RESOURCES_PATH
 import csv
 import jieba

@@ -1,4 +1,4 @@
-#1.增加不玩了退出功能 2.增加游戏计时退出功能 3.改成四种方式触发，超越猜拳、村花猜拳、剪刀石头布、石头剪刀布 4.玩游戏吧，列出已有的游戏列表
+# -*- coding: utf-8 -*-
 import random
 from random import choice
 import os
