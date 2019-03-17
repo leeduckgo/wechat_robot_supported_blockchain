@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from random import choice
 import os
 from wxpy import Tuling
@@ -8,7 +9,6 @@ from settings import TULING_KEY
 
 class Replier(object):
     """消息回复"""
-
     def __init__(self):
         # self.group = group
         self.log = Logger()
