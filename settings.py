@@ -2,8 +2,7 @@ import os
 
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 RESOURCES_PATH = os.path.join(PROJECT_PATH, 'resources', 'text', 'words.csv')
-LOG_DIRECTORY = os.path.join(PROJECT_PATH, 'log')
-GAME_IMAGE_PATH = os.path.join(PROJECT_PATH, 'resources','pics', 'game') 
+LOG_DIRECTORY = os.path.join(PROJECT_PATH, 'log') 
 LOG_LEVEL = 'DEBUG'
 GROUP1 = '测试'
 TULING_KEY = 'e889671fd22348528747941d7e563e02'
