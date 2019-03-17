@@ -12,7 +12,7 @@ class RspGame(object):
         self.player_score = 0
         self.com_score = 0
         self.player_name = ''
-        self.img_dir = ['rock', 'scissors', 'paper',  'nothing']
+        self.img_dir = ['rock', 'scissors', 'paper',  'emoticon']
         #self.rsp_img = [os.path.join(GAME_IMAGE_PATH, 'rock_1.jpg'), os.path.join(GAME_IMAGE_PATH, 'scissors_1.jpg'), os.path.join(GAME_IMAGE_PATH, 'paper_1.jpg')]
         #print(self.rsp_img)
         self.draw_msg = " 平局了，继续来~"
@@ -60,7 +60,7 @@ class RspGame(object):
         if str.find(valid_msg, "不玩") != -1 or str.find(valid_msg, "退出") != -1:
             return 1, '@' + self.player_name + " 虽然半途而废不怎么好听，但有时候放弃也是一种聪明的选择", self.random_img(3)
         elif valid_msg != "石头" and valid_msg != "剪刀" and valid_msg != "布":
-            return 0, '@' + self.player_name + " 你出的是错的！这叫我怎么出...", self.random_img(3)
+            return 0, '@' + self.player_name + " 不遵守游戏规则，会被我拉人黑名单", self.random_img(3)
         random_num = random.randint(1, 3) - 1
         self.log.debug('random_num:{}'.format(random_num))
         self.log.debug('msg_code:{}'.format(self.msg_code[valid_msg]))
