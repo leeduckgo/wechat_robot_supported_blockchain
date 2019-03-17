@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+
 from wxpy import embed
 from wxpy import Bot
 from wxpy import User
 from wxpy import Group
 from common.message_replier import Replier  # 导入即运行
 from common.logger import Logger
-
+from time import sleep
 
 # === init ===
 
@@ -16,7 +17,7 @@ logger = Logger()  # 单例模式下项目中只会创建一个logger对象
 
 # === main process ===
 if __name__ == '__main__':
-
+    replier = Replier()
     # 自动接受新的好友请求
     @bot.register(msg_types='Friends')
     def auto_accept_friends(msg):
@@ -28,13 +29,16 @@ if __name__ == '__main__':
     @bot.register()
     def reply_message(msg):
         """消息回复"""
-        if type(msg.sender) == Group:  # 所有群组消息
-            replier = Replier()
-            typ, content = replier.handle_msg(msg)
+        if type(msg.sender) == Group:  # 所有群组消息          
+            typ, content1, content2 = replier.handle_msg(msg)
             if typ == 'text':
-                msg.reply(content)
+                msg.reply_msg(content1)
             elif typ == 'img':
-                msg.reply_image(content)
+                msg.reply_image(content1)
+            elif typ == 'both':
+                msg.reply_image(content1)
+                sleep(1)
+                msg.reply_msg(content2)
         else:  # todo 私聊消息
             logger.info(msg)
 

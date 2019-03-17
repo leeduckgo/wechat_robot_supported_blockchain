@@ -6,7 +6,6 @@ from common.logger import Logger
 
 QA_dict = {}
 
-
 class YcyReplier(object):
     def __init__(self):
         self.log = Logger()
