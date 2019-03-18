@@ -9,8 +9,10 @@ from settings import TULING_KEY
 import re
 from common.communication import create_messages
 
+
 class Replier(object):
     """消息回复"""
+
     def __init__(self):
         # self.group = group
         self.log = Logger()
@@ -18,7 +20,7 @@ class Replier(object):
         self.tuling = Tuling(api_key=TULING_KEY)
         self.rsp_game = RspGame(5)
         self.rsp_game_player_name = ''
-        self.rsp_game_flag = False #是否开启石头剪刀布游戏
+        self.rsp_game_flag = False  # 是否开启石头剪刀布游戏
 
     def random_img(self):
         """随机获取图片"""
@@ -28,12 +30,14 @@ class Replier(object):
         return os.path.join("resources", "pics", path)
 
     def handle_msg(self, msg):
-        """进行游戏"""
-        if  self.rsp_game_flag:
-            if not msg.is_at:#如果没有@到机器人，不进行回应
+        """处理回复消息"""
+
+        # 进行游戏
+        if self.rsp_game_flag:
+            if not msg.is_at:  # 如果没有@到机器人，不进行回应
                 return '', '', ''
-            elif self.rsp_game_player_name != msg.member.display_name:#不是玩家的消息，不进行回应
-                return 'text', '@' + msg.member.display_name + " 先等等哦，我正在跟@" + self.rsp_game_player_name+ " 玩石头剪刀布", ''
+            elif self.rsp_game_player_name != msg.member.display_name:  # 不是玩家的消息，不进行回应
+                return 'text', '@' + msg.member.display_name + " 先等等哦，我正在跟@" + self.rsp_game_player_name + " 玩石头剪刀布", ''
             else:
                 cancel, result, pic = self.rsp_game.play(msg)
                 self.log.debug('game result:{} pic:{}'.format(result, pic))
@@ -41,7 +45,6 @@ class Replier(object):
                     self.rsp_game_flag = False
                 return 'both', pic, result
 
-        """处理回复消息"""
         self.log.info(msg)
 
         if msg.text == "天降超越":
@@ -56,9 +59,9 @@ class Replier(object):
             return '', '', ''
         else:
             real_msg = msg.text.split()
-            self.log.debug("send:"+real_msg[len(real_msg)-1])
-            if real_msg[len(real_msg)-1] == "石头剪刀布" or  real_msg[len(real_msg)-1] == "剪刀石头布" \
-            or  real_msg[len(real_msg)-1] == "猜拳":
+            self.log.debug("send:" + real_msg[len(real_msg) - 1])
+            if real_msg[len(real_msg) - 1] == "石头剪刀布" or real_msg[len(real_msg) - 1] == "剪刀石头布" \
+                    or real_msg[len(real_msg) - 1] == "猜拳":
                 self.rsp_game_player_name = msg.member.display_name
                 self.rsp_game.start(msg.member.display_name)
                 self.rsp_game_flag = True
