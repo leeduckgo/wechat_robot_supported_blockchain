@@ -46,7 +46,7 @@ if __name__ == '__main__':
                 log.info(msg.text)
     except Exception:
         # 找到需要接收日志的群 -- `ensure_one()` 用于确保找到的结果是唯一的，避免发错地方
-        group_receiver = ensure_one(bot.groups().search('超越微信机器人'))
+        group_receiver = ensure_one(bot.groups().search('超越微信机器人')) # todo 暂时
         logger = get_wechat_logger(group_receiver)  # 重大错误监控,发送消息至指定群聊
         logger.error(traceback.format_exc())
 
