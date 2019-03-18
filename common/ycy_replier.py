@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from settings import RESOURCES_PATH
 import csv
 import jieba
@@ -5,7 +6,6 @@ import jieba.analyse
 from common.logger import Logger
 
 QA_dict = {}
-
 
 class YcyReplier(object):
     def __init__(self):

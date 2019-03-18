@@ -1,21 +1,24 @@
+# -*- coding: utf-8 -*-
 from random import choice
 import os
 from wxpy import Tuling
 from common.logger import Logger
 from common.ycy_replier import YcyReplier
+from common.rock_scissors_paper import RspGame
 from settings import TULING_KEY
 import re
 from common.communication import create_messages
 
-
 class Replier(object):
-    """回复消息"""
-
+    """消息回复"""
     def __init__(self):
         # self.group = group
         self.log = Logger()
         self.ycy = YcyReplier()
         self.tuling = Tuling(api_key=TULING_KEY)
+        self.rsp_game = RspGame(5)
+        self.rsp_game_player_name = ''
+        self.rsp_game_flag = False #是否开启石头剪刀布游戏
 
     def random_img(self):
         """随机获取图片"""
@@ -24,22 +27,20 @@ class Replier(object):
         self.log.info('choose:-->{}'.format(path))
         return os.path.join("resources", "pics", path)
 
-    def handle_leave_message(self, msg):
-        """处理留言"""
-        is_leave_message = re.search(r'(留言:|留言：)(.*)', msg.text)
-        if is_leave_message:
-            content = is_leave_message.group(2).strip()  # 获取第二组内容并去除前后空格
-            self.log.info('留言内容:{}'.format(content))
-            status = create_messages(name=msg.member.name, content=content, fans_id=msg.member.puid)
-            if status == 200:
-                return 'text', '@' + msg.member.name + ' ' + "留言成功！点击 {} 可查看你的留言".format(
-                    'http://ycy.ahasmarter.com/'
-                )
-            else:
-                return 'text', '@' + msg.member.name + ' ' + "留言失败！稍后再尝试吧"
-        return '', ''
-
     def handle_msg(self, msg):
+        """进行游戏"""
+        if  self.rsp_game_flag:
+            if not msg.is_at:#如果没有@到机器人，不进行回应
+                return '', '', ''
+            elif self.rsp_game_player_name != msg.member.display_name:#不是玩家的消息，不进行回应
+                return 'text', '@' + msg.member.display_name + " 先等等哦，我正在跟@" + self.rsp_game_player_name+ " 玩石头剪刀布", ''
+            else:
+                cancel, result, pic = self.rsp_game.play(msg)
+                self.log.debug('game result:{} pic:{}'.format(result, pic))
+                if cancel == 1:
+                    self.rsp_game_flag = False
+                return 'both', pic, result
+
         """处理回复消息"""
         self.log.info(msg)
 
@@ -47,22 +48,23 @@ class Replier(object):
             path = self.random_img()
             self.log.debug(path)
             # self.group.send_image(path)
-            return 'img', path
+            return 'img', path, ''
         if str.find(msg.text, "燃烧") != -1:
             # self.group.send()
-            return 'text', "燃烧我的卡路里！"
-
-        if msg.is_at:  # 如果没有@到机器人，不进行回应
-            typ, content = self.handle_leave_message(msg)  # 处理留言请求
-            if typ:
-                self.log.info(content)
-                return typ, content
+            return 'text', "燃烧我的卡路里！", ''
+        if not msg.is_at:  # 如果没有@到机器人，不进行回应
+            return '', '', ''
+        else:
             real_msg = msg.text.split()
-            self.log.debug("send： " + real_msg[len(real_msg) - 1])
+            self.log.debug("send:"+real_msg[len(real_msg)-1])
+            if real_msg[len(real_msg)-1] == "石头剪刀布" or  real_msg[len(real_msg)-1] == "剪刀石头布" \
+            or  real_msg[len(real_msg)-1] == "猜拳":
+                self.rsp_game_player_name = msg.member.display_name
+                self.rsp_game.start(msg.member.display_name)
+                self.rsp_game_flag = True
+                return 'text', '@' + msg.member.display_name + " 石头剪刀布开始，你先出吧，赢了我有奖励哦(五局三胜)", ''
             respond_msg = self.ycy.reply_text(real_msg[len(real_msg) - 1])
             if respond_msg:
-                return 'text', '@' + msg.member.name + ' ' + respond_msg
+                return 'text', '@' + msg.member.display_name + ' ' + respond_msg, ''
             else:
-                return 'text', self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝")
-
-        return '', ''
+                return 'text', self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝"), ''
