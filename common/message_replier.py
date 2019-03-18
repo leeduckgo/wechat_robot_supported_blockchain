@@ -64,8 +64,8 @@ class Replier(object):
         :param msg:
         :return:
         """
-        is_get_group_introduction = re.findall(r'本群简介', msg.text)
-        if not is_get_group_introduction:
+        real_msg = msg.text.split()
+        if real_msg[len(real_msg) - 1] != "本群简介":
             return empty_result
         d = get_group_introduction(msg.sender.group.puid)
         if not d:
@@ -95,13 +95,16 @@ class Replier(object):
         :param msg:
         :return:
         """
-        if self.rsp_game_flag:
-            # 游戏超过5分钟未结束,强制终止,避免用户长时间占用机器人
-            if now_to_datetime4() > five_minutes_later(self.start_game_time):
+        if self.start_game_time:
+            is_overtime = now_to_datetime4() > five_minutes_later(self.start_game_time)
+            if is_overtime:
                 self.rsp_game_flag = False
                 self.start_game_time = None
+                msg = '@' + self.rsp_game_player_name + ' 游戏已经超时自动终止了呀!'
+                msg.chat.send_msg(msg)
                 self.rsp_game_player_name = ''
-                return '', '', ''
+
+        if self.rsp_game_flag:
             if self.rsp_game_player_name != msg.member.display_name:  # 不是玩家的消息，不进行回应
                 return 'text', '@' + msg.member.display_name + " 先等等哦，我正在跟@" + \
                        self.rsp_game_player_name + " 玩石头剪刀布", ''
@@ -123,7 +126,7 @@ class Replier(object):
         :return:
         """
         self.log.info('receive: %s' % msg.text)
-        if msg.text in ("杨超越",):  # todo 待增加
+        if msg.text in ("杨超越", "天降超越"):  # todo 待增加
             path = self.random_img()
             self.log.debug(path)
             # self.group.send_image(path)
