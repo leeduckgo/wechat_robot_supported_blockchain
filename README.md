@@ -23,9 +23,11 @@ YCY Token is kind of credit you can use in our platform. With the development of
 
 - Random YCY picture ([wf1314](https://github.com/wf1314)✅)
 - Http communication supported ([albertschr](https://github.com/albertschr) ✅)
-- Smart chat ([DawnSunshine](https://github.com/DawnSunshine)[3.8 => 3.15])
-- Little Game 1([DawnSunshine](https://github.com/DawnSunshine)[3.10 => 3.15])
-- H5 ([143777](https://github.com/143777)[3.8 => 3.15])
+- Smart chat ([DawnSunshine](https://github.com/DawnSunshine)
+- Little Game 1([DawnSunshine](https://github.com/DawnSunshine)
+- H5 ([143777](https://github.com/143777)
+- Add get group introduce ([wf1314](https://github.com/wf1314)✅)
+- Fix mini-games ([wf1314](https://github.com/wf1314)✅)
 
 ## Getting Started
 
