@@ -27,7 +27,7 @@ YCY Token is kind of credit you can use in our platform. With the development of
 - Little Game 1([DawnSunshine](https://github.com/DawnSunshine)
 - H5 ([143777](https://github.com/143777)
 - Add get group introduce ([wf1314](https://github.com/wf1314)✅)
-- Fix mini-games ([wf1314](https://github.com/wf1314)✅)
+- Fix Little Game 1 ([wf1314](https://github.com/wf1314)✅)
 
 ## Getting Started
 
