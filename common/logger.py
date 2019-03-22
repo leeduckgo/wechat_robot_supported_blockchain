@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging.handlers
 from settings import LOG_DIRECTORY, LOG_LEVEL
 import os

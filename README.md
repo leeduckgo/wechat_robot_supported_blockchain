@@ -36,6 +36,7 @@ YCY Token is kind of credit you can use in our platform. With the development of
 - [20190309] Add Mocker, Requester and Manager
 - [20190309] Add smart chat based on Tuling
 - [20190310] Have a rest
+- [20190315] Change monitoring rules
 
 ## Plan
 
