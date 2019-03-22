@@ -5,15 +5,18 @@
         <script src="js/axios.min.js"></script>
         <script src="js/js.cookie.js"></script>
         <script src="js/marked.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" >
     </head>
     <body>
+        <div style="text-align:center"><h1>村头留言板</h1></div>
         <main role="main" class="flex-shrink-0">
             <div class="container" id = "msgs">
                     <div class="list-group"  v-for="msg in all_msgs">
                         <div class="list-group-item list-group-item-action" >
-                            <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{msg.group_name}} 的 {{msg.name}} 说：</h5>
-                            <p class="mb-1">{{msg.context}}</p>
+                            <div>
+                                <p>{{msg.group_name}} 的 {{msg.name}} 说：</p>
+                                <h5 class="mb-1">{{msg.context}}</h5>
+                            </div>
                         </div>
                     </div>
             </div>
@@ -32,7 +35,8 @@
                             url:'/api/v1/ycy/messages'
                         })
                         .then(function(response){
-                            msgs.all_msgs = response.data.entries
+                            console.log(response.data)
+                            msgs.all_msgs = response.data
                             
                         })
                         .catch(function(error){
@@ -46,4 +50,3 @@
     </body>
 </html>
 
-<!--说话墙-->
