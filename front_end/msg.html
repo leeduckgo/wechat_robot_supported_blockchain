@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>村头留言板</title>
+        <script src="js/vue.min.js"></script>
+        <script src="js/axios.min.js"></script>
+        <script src="js/js.cookie.js"></script>
+        <script src="js/marked.js"></script>
+    </head>
+    <body>
+        <main role="main" class="flex-shrink-0">
+            <div class="container" id = "msgs">
+                    <div class="list-group"  v-for="msg in all_msgs">
+                        <div class="list-group-item list-group-item-action" >
+                            <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{msg.group_name}} 的 {{msg.name}} 说：</h5>
+                            <p class="mb-1">{{msg.context}}</p>
+                        </div>
+                    </div>
+            </div>
+            
+        </main>
+        <script>
+            var msgs = new Vue({
+                el:'#msgs',
+                data:{
+                    all_msgs: new Array()
+                },
+                methods:{
+                    get_msgs:function(){
+                        axios({
+                            method:'get',
+                            url:'/api/v1/ycy/messages'
+                        })
+                        .then(function(response){
+                            msgs.all_msgs = response.data.entries
+                            
+                        })
+                        .catch(function(error){
+                            alert(error);
+                        })
+                    }
+                }                
+            })
+        msgs.get_msgs()
+        </script>
+    </body>
+</html>
+
+<!--说话墙-->
