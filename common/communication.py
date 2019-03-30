@@ -1,6 +1,5 @@
 import requests
 
-
 class Requester(object):
     def __init__(self, node):
         self.node = node
@@ -10,7 +9,7 @@ class Requester(object):
         r = requests.post(url, json=payload)
         return r.json()
 
-    def get(self, path, params):
+    def get(self, path, params = None):
         url = self.node + path
         r = requests.get(url, params=params)
         return r.json()

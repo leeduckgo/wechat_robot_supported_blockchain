@@ -6,7 +6,8 @@ from common.logger import Logger
 from common.ycy_replier import YcyReplier
 from common.rock_scissors_paper import RspGame
 from settings import TULING_KEY
-
+from common.group import Group
+from common.user import User
 class Replier(object):
     """消息回复"""
     def __init__(self):
@@ -17,7 +18,11 @@ class Replier(object):
         self.rsp_game = RspGame(5)
         self.rsp_game_player_name = ''
         self.rsp_game_flag = False #是否开启石头剪刀布游戏
+        self.group = Group()
+        self.user = User()
 
+    def set_group(self, puid):
+        self.group.set_group(puid)
     def random_img(self):
         """随机获取图片"""
         list_dir = os.listdir(os.path.join('resources', 'pics'))
@@ -49,11 +54,50 @@ class Replier(object):
         if str.find(msg.text, "燃烧") != -1:
             # self.group.send()
             return 'text', "燃烧我的卡路里！", ''
+        if str.find(msg.text, "打赏") != -1:
+            str_after_dashang = msg.text[str.find(msg.text, "打赏") + 3:].split()
+            to = self.user.find_user_by_name(msg.sender, str_after_dashang[0])
+            from_puid = msg.member.puid
+            print(from_puid)
+            print(to.puid)
+            result = self.user.transfer(from_puid, to.puid, int(str_after_dashang[1]))
+            if result["status"] == "success":
+                payload = '打赏成功！'+ msg.member.name + " 打赏给 " + to.name + " " + str_after_dashang[1] + "个超越积分！"
+                return 'text', payload, ''
+            else:
+                return 'text', '打赏失败！', ''
         if not msg.is_at:  # 如果没有@到机器人，不进行回应
             return '', '', ''
         else:
             real_msg = msg.text.split()
+            print(real_msg[len(real_msg)-1])
             self.log.debug("send:"+real_msg[len(real_msg)-1])
+            if real_msg[len(real_msg)-1] == "群信息":
+                return 'text', self.group.intro, ''
+            
+            if real_msg[len(real_msg)-1] == "余额":
+                user_puid = msg.member.puid
+                balance = self.user.get_balance_by_puid(user_puid)
+                msg = "你有" + str(balance) + "超越积分"
+                return 'text', msg, ''
+            if real_msg[len(real_msg)-1] == "等级":
+                user_puid = msg.member.puid
+                balance = self.user.get_level_by_puid(user_puid)
+                msg = "你现在是" + str(balance) + "级"
+                return 'text', msg, ''
+            if real_msg[len(real_msg)-1] == "天降超越":
+                path = self.random_img()
+                self.log.debug(path)
+                # self.group.send_image(path)
+                return 'img', path, ''
+            if real_msg[len(real_msg)-1] == "初始化":
+                if msg.member.puid == self.group.admin_puid: #如果是管理员
+                    print(msg.sender)
+                    self.user.update_users(msg.sender)
+                    print("初始化完成！")
+                    return 'text', "初始化完成！", ''
+                else:
+                    return 'text', "乃不是管理员啊", ''              
             if real_msg[len(real_msg)-1] == "石头剪刀布" or  real_msg[len(real_msg)-1] == "剪刀石头布" \
             or  real_msg[len(real_msg)-1] == "猜拳":                
                 self.rsp_game_player_name = msg.member.display_name

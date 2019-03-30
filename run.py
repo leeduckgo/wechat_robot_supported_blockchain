@@ -9,9 +9,11 @@ from common.logger import Logger
 from time import sleep
 
 # === init ===
-
+# user.name 用户群内备注名称
+# user.nick_name 用户微信名称
 # bot = Bot(cache_path=True, console_qr=True)  # 控制台二维码
-bot = Bot(cache_path=True)  # 短时间内重启无需重新登录
+#bot = Bot(cache_path=True)  # 短时间内重启无需重新登录
+bot = Bot()
 bot.enable_puid()
 logger = Logger()  # 单例模式下项目中只会创建一个logger对象
 
@@ -25,11 +27,15 @@ if __name__ == '__main__':
         new_friend = msg.card.accept()
         # 向新的好友发送消息
         new_friend.send('你好呀,我是全村的希望!')  # todo 内容待定 附加功能介绍
-
+    
     @bot.register()
     def reply_message(msg):
+        
         """消息回复"""
-        if type(msg.sender) == Group:  # 所有群组消息          
+        #if type(msg.sender) == Group:  # 所有群组消息
+        if msg.sender.puid in ["1f423133"]: #限定群组
+            replier.set_group(msg.sender.puid) # 获取群信息
+            print(msg.member.puid)  
             typ, content1, content2 = replier.handle_msg(msg)
             if typ == 'text':
                 msg.reply_msg(content1)
