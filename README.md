@@ -1,7 +1,7 @@
 # YCY Wechat Robot supported Blockchain
 YCY(YangChaoyue) Wechat Robot supported Blockchain, coding in Python. (ﾟДﾟ)y─┛
 
-**Contributer:** [wf1314](https://github.com/wf1314)
+**Home Page:**  http://ycy.ahasmarter.com
 
 **Creater's Wechat ID:** 197626581
 
@@ -23,9 +23,9 @@ YCY Token is kind of credit you can use in our platform. With the development of
 
 - Random YCY picture ([wf1314](https://github.com/wf1314)✅)
 - Http communication supported ([albertschr](https://github.com/albertschr) ✅)
-- Smart chat ([DawnSunshine](https://github.com/DawnSunshine)[3.8 => 3.15])
-- Little Game 1([DawnSunshine](https://github.com/DawnSunshine)[3.10 => 3.15])
-- H5 ([143777](https://github.com/143777)[3.8 => 3.15])
+- Smart chat ([DawnSunshine](https://github.com/DawnSunshine))✅)
+- Little Game 1([DawnSunshine](https://github.com/DawnSunshine))✅)
+- H5 ([143777](https://github.com/143777)✅)
 
 ## Getting Started
 
@@ -37,7 +37,8 @@ YCY Token is kind of credit you can use in our platform. With the development of
 - [20190309] Add smart chat based on Tuling
 - [20190310] Have a rest
 - [20190315] Change monitoring rules
+- [20190331] 1.0.0 Publish
 
 ## Plan
 
-- [20190317] First Verion of YCY Wechat Robot (v1.0.0)
+- [20190331] First Verion of YCY Wechat Robot (v1.0.0)
