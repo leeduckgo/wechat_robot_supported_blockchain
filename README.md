@@ -1,7 +1,7 @@
 # YCY Wechat Robot supported Blockchain
 YCY(YangChaoyue) Wechat Robot supported Blockchain, coding in Python. (ﾟДﾟ)y─┛
 
-**Contributer:** [wf1314](https://github.com/wf1314)
+**Home Page:**  http://ycy.ahasmarter.com
 
 **Creater's Wechat ID:** 197626581
 
