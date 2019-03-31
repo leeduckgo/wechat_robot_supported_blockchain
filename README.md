@@ -37,7 +37,8 @@ YCY Token is kind of credit you can use in our platform. With the development of
 - [20190309] Add smart chat based on Tuling
 - [20190310] Have a rest
 - [20190315] Change monitoring rules
+- [20190331] 1.0.0 Publish
 
 ## Plan
 
-- [20190317] First Verion of YCY Wechat Robot (v1.0.0)
+- [20190331] First Verion of YCY Wechat Robot (v1.0.0)
