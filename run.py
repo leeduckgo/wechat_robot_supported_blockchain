@@ -32,7 +32,7 @@ if __name__ == '__main__':
     
     @bot.register()
     def reply_message(msg):
-        
+        print(msg.sender)
         """消息回复"""
         if type(msg.sender) == Group:  # 所有群组消息
             if msg.sender.puid in ["1f423133", "4193b4db"]: #限定群组
