@@ -365,3 +365,64 @@
         }
     }
 }
+
+
+@media only screen and (device-width: 1280px) {
+    .homeBanner-content-left {
+        width: 43% !important;
+    }
+}
+
+
+@media only screen and (device-width: 1024px) {
+    .homeBanner-title-left {
+        margin-left: -60px;
+    }
+    .homeBanner-title-right {
+        margin-right: -60px;
+    }
+    .homeBanner-content-left {
+        display: flex;
+        flex-direction: column;
+        width: 50% !important;
+        margin-left: -60px;
+        .whole-village-hope-pc {
+            color: #ffffff;
+            font-size: 16px !important;
+            position: relative;
+            display: inline-block;
+            .versionImg {
+                width: 40% !important;
+                position: absolute;
+                right: -35px !important;
+                top: -5px !important;
+            }
+        }
+        h2 {
+            font-size: 20px !important;
+            color: #ffffff;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+        
+        .homeBanner-content-left-img {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 35px;
+            img {
+                width: 80px !important;
+                height: 80px !important;
+                border: 5px solid #ffffff;
+                border-radius: 6px;
+            }
+            span {
+                font-size: 8px;
+                color: #ffffff;
+                margin-top: 5px;
+            }
+        }
+    }
+}

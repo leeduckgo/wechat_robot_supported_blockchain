@@ -4,7 +4,7 @@
             <div class="homeBanner-title">
                 <div class="homeBanner-title-left">
                     <div class="homeBanner-title-left-img">
-                        <img src="../assets/images/ycy.jpeg" alt="">
+                        <img src="../assets/images/ycy1.jpeg" alt="">
                     </div>
                     <span>全村的希望</span>
                 </div>
@@ -43,7 +43,7 @@
                 <p>不同微信群之间的积分互转、</p>
                 <p>智能语聊、吸越、红包系统、超越相关小游戏</p>
                 <p>......</p>
-                <div class="toGitHub">前往全村的沙雕GitHub</div>
+                <div class="toGitHub" ><a href="https://github.com/albertschr/ycy_wechat_robot_supported_blockchain" target="_blank" style="color: #ffffff;">前往全村的沙雕GitHub</a></div>
             </div>
             <div class="introduce-text-left-img">
                 <img src="../assets/images/ycyBg1.jpg" alt="" style="width: 120%;">
@@ -64,7 +64,7 @@
                 <p>不同微信群之间的积分互转、</p>
                 <p>智能语聊、吸越、红包系统、超越相关小游戏</p>
                 <p>......</p>
-                <div class="toGitHub">前往全村的沙雕GitHub</div>
+                <div class="toGitHub" ><a href="https://github.com/albertschr/ycy_wechat_robot_supported_blockchain" target="_blank" style="color: #ffffff;" >前往全村的沙雕GitHub</a></div>
             </div>
             <div class="introduce-text-left-img" style="margin-top: 30px;">
                 <img src="../assets/images/ycyBg3.png" alt="">
@@ -85,7 +85,7 @@
                 <p>不同微信群之间的积分互转、</p>
                 <p>智能语聊、吸越、红包系统、超越相关小游戏</p>
                 <p>......</p>
-                <div class="toGitHub">前往全村的沙雕GitHub</div>
+                <div class="toGitHub" ><a href="https://github.com/albertschr/ycy_wechat_robot_supported_blockchain" target="_blank" style="color: #ffffff;">前往全村的沙雕GitHub</a></div>
             </div>
             <div class="introduce-text-left-img" style="margin-top: 30px;">
                 <img src="../assets/images/redBag.jpg" alt="">
