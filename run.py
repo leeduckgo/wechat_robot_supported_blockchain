@@ -7,6 +7,7 @@ from wxpy import Group
 from common.message_replier import Replier  # 导入即运行
 from common.logger import Logger
 from time import sleep
+import secret
 
 # === init ===
 # user.name 用户群内备注名称
@@ -19,33 +20,35 @@ logger = Logger()  # 单例模式下项目中只会创建一个logger对象
 
 # === main process ===
 if __name__ == '__main__':
-    replier = Replier()
+    replier = Replier(secret.api_key)
     # 自动接受新的好友请求
-    @bot.register(msg_types='Friends')
-    def auto_accept_friends(msg):
+    def reply_solo(msg):
         """接受好友请求"""
-        new_friend = msg.card.accept()
+        friend = msg.sender
         # 向新的好友发送消息
-        new_friend.send('你好呀,我是全村的希望!')  # todo 内容待定 附加功能介绍
+        friend.send('你好呀,我是全村的希望!')  # todo 内容待定 附加功能介绍
+        friend.send('参与内测请扫码加群：')
+        friend.send_image('group.jpeg')
     
     @bot.register()
     def reply_message(msg):
         
         """消息回复"""
-        #if type(msg.sender) == Group:  # 所有群组消息
-        if msg.sender.puid in ["1f423133"]: #限定群组
-            replier.set_group(msg.sender.puid) # 获取群信息
-            print(msg.member.puid)  
-            typ, content1, content2 = replier.handle_msg(msg)
-            if typ == 'text':
-                msg.reply_msg(content1)
-            elif typ == 'img':
-                msg.reply_image(content1)
-            elif typ == 'both':
-                msg.reply_image(content1)
-                sleep(1)
-                msg.reply_msg(content2)
+        if type(msg.sender) == Group:  # 所有群组消息
+            if msg.sender.puid in ["1f423133"]: #限定群组
+                replier.set_group(msg.sender.puid) # 获取群信息
+                print(msg.member.puid)  
+                typ, content1, content2 = replier.handle_msg(msg)
+                if typ == 'text':
+                    msg.reply_msg(content1)
+                elif typ == 'img':
+                    msg.reply_image(content1)
+                elif typ == 'both':
+                    msg.reply_image(content1)
+                    sleep(1)
+                    msg.reply_msg(content2)
         else:  # todo 私聊消息
+            reply_solo(msg)
             logger.info(msg)
 
     embed()  # 阻塞线程不退出'

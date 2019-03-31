@@ -15,3 +15,7 @@ class Group:
         print(intro)
         # return intro_modified
         return [intro_modified, intro["admin_puid"]]
+    
+    def update_group(self, group, api_key):
+        payload = {"group": {"level": 1, "introdcution" :"燃烧我的卡路里！", "puid": group.puid}}
+        self.requester.post("users/create?api=" + api_key, payload)

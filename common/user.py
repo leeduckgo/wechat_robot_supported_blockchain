@@ -14,10 +14,10 @@ class User():
         for member in group.members:
             if name in member.name:
                 return member
-    def transfer(self, from_puid, to_puid, amount):
+    def transfer(self, from_puid, to_puid, amount, api_key):
         payload = {"from": from_puid,"to": to_puid,"amount": amount}     
-        return self.requester.post("users/transfer", payload)
-    def update_users(self, group):
+        return self.requester.post("users/transfer?api=" + api_key, payload)
+    def update_users(self, group, api_key):
         members = group.members
         users = []
         for member in members:
@@ -26,6 +26,6 @@ class User():
                     "level": 1, "balance": 0}
             users.append(user)
         payload = {"group": group.puid, "users": users}
-        self.requester.post("users/create", payload)
+        self.requester.post("users/create?api=" + api_key, payload)
 
         
