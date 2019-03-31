@@ -35,7 +35,7 @@ if __name__ == '__main__':
         
         """消息回复"""
         if type(msg.sender) == Group:  # 所有群组消息
-            if msg.sender.puid in ["1f423133"]: #限定群组
+            if msg.sender.puid in ["1f423133", "4193b4db"]: #限定群组
                 replier.set_group(msg.sender.puid) # 获取群信息
                 print(msg.member.puid)  
                 typ, content1, content2 = replier.handle_msg(msg)
