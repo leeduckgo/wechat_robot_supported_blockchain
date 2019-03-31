@@ -117,7 +117,7 @@ class Replier(object):
             if real_msg[len(real_msg)-1] == "初始化":
                 if msg.member.puid == self.group.admin_puid: # 如果是管理员
                     print(msg.sender)
-                    self.group.update_group(msg.sender, self.api_key)
+                    # self.group.update_group(msg.sender, self.api_key)
                     self.user.update_users(msg.sender, self.api_key)
                     print("初始化完成！")
                     return 'text', "初始化完成！", ''
