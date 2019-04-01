@@ -27,8 +27,8 @@ if __name__ == '__main__':
         friend = msg.sender
         # 向新的好友发送消息
         friend.send('你好呀,我是全村的希望!')  # todo 内容待定 附加功能介绍
-        friend.send('参与内测请扫码加群：')
-        friend.send_image('group.jpeg')
+        friend.send('参与内测请回复报名')
+        # friend.send_image('group.jpeg')
     
     @bot.register()
     def reply_message(msg):

@@ -42,7 +42,9 @@ class Replier(object):
             result = self.group.requester.create_messages(group_name="内测群", name=msg.member.name, content=content, fans_id=msg.member.puid)
             return result
 
-
+    def handle_level(self, level):
+        list = ["隔壁村的幼稚鬼", "村子里的弟中弟", "村民中的初学者", "村子里的高中生", "合格的成年村民"]
+        return list[level - 1]
     def handle_msg(self, msg):
         """进行游戏"""
         if  self.rsp_game_flag:
@@ -89,13 +91,16 @@ class Replier(object):
                 return 'text', self.group.intro, ''
             if real_msg[len(real_msg)-1] == "致谢":
                 return 'text', "感谢「心理医生聪」，提供超越语录的支持！", ''
-            if real_msg[len(real_msg)-1] == "帮助":
+            if real_msg[len(real_msg)-1] == "帮助" or real_msg[len(real_msg)-1] == "?":
                 payload = "本 AI 目前支持以下功能: \n" +\
                     "- 超越积分\n" + \
                         "- 天降超越\n" + \
                             "- 超越猜拳\n" + \
                                 "- 村头留言板\n"
-                return 'text', payload, ''    
+                return 'text', payload, ''
+            if real_msg[len(real_msg)-1] == "超越积分":
+                msg = "超越积分可以用来干很多好玩的事情。"
+                return 'text', msg, ''
             if real_msg[len(real_msg)-1] == "余额":
                 user_puid = msg.member.puid
                 balance = self.user.get_balance_by_puid(user_puid)
@@ -103,8 +108,8 @@ class Replier(object):
                 return 'text', msg, ''
             if real_msg[len(real_msg)-1] == "等级":
                 user_puid = msg.member.puid
-                balance = self.user.get_level_by_puid(user_puid)
-                msg = "你现在是" + str(balance) + "级"
+                level = self.user.get_level_by_puid(user_puid)
+                msg = "你现在是" + str(level) + "级: " + self.handle_level(level)
                 return 'text', msg, ''
             if real_msg[len(real_msg)-1] == "天降超越":
                 path = self.random_img()
