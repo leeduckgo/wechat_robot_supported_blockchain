@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 import datetime
+
 from dateutil.relativedelta import relativedelta
+
 
 def format_datetime(dt):
     if not dt:

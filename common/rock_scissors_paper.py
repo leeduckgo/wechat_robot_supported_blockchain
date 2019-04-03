@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 import random
+
 from random import choice
+
 from common.logger import Logger
 
 
@@ -43,24 +45,24 @@ class RspGame(object):
             if self.player_score == (self.game_all_num + 1) / 2:
                 return 1, '@' + self.player_name + self.over_msg[1] + " 总比分：{}-{}".format(
                     self.com_score,
-                    self.player_score
+                    self.player_score,
                 )
             else:
                 return 0, '@' + self.player_name + self.fail_msg + " 目前比分：{}-{}".format(
                     self.com_score,
-                    self.player_score
+                    self.player_score,
                 )
         elif winer == -1:
             self.com_score += 1
             if self.com_score == (self.game_all_num + 1) / 2:
                 return 1, '@' + self.player_name + self.over_msg[0] + " 总比分：{}-{}".format(
                     self.com_score,
-                    self.player_score
+                    self.player_score,
                 )
             else:
                 return 0, '@' + self.player_name + self.win_msg + " 目前比分：{}-{}".format(
                     self.com_score,
-                    self.player_score
+                    self.player_score,
                 )
 
     def play(self, msg):
@@ -88,7 +90,7 @@ class RspGame(object):
         if winer == 0:
             return 0, '@' + self.player_name + self.draw_msg + " 目前比分：{}-{}".format(
                 self.com_score,
-                self.player_score
+                self.player_score,
             ), self.random_img(random_num)
         else:
             can, res_msg = self.get_result(winer)

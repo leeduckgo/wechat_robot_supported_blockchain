@@ -1,6 +1,9 @@
-from PIL import Image
-import numpy as np
+# -*- coding: utf-8 -*-
 import cv2
+import numpy as np
+
+from PIL import Image
+
 
 def pic_to_handwork(pic_path, save_path):
     """
@@ -45,25 +48,27 @@ def pic_to_cartoon(pic_path, save_path):
     """
     imgInput_FileName = pic_path
     imgOutput_FileName = save_path
-    num_down = 2         #缩减像素采样的数目
-    num_bilateral = 7    #定义双边滤波的数目
-    img_rgb = cv2.imread(imgInput_FileName)     #读取图片
-    #用高斯金字塔降低取样
+    num_down = 2  # 缩减像素采样的数目
+    num_bilateral = 7  # 定义双边滤波的数目
+    img_rgb = cv2.imread(imgInput_FileName)  # 读取图片
+    # 用高斯金字塔降低取样
     img_color = img_rgb
 
-    #重复使用小的双边滤波代替一个大的滤波
+    # 重复使用小的双边滤波代替一个大的滤波
     for _ in range(num_bilateral):
-        img_color = cv2.bilateralFilter(img_color,d=9,sigmaColor=9,sigmaSpace=7)
-    #转换为灰度并且使其产生中等的模糊
+        img_color = cv2.bilateralFilter(img_color, d=9, sigmaColor=9, sigmaSpace=7)
+    # 转换为灰度并且使其产生中等的模糊
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
     img_blur = cv2.medianBlur(img_gray, 7)
-    #检测到边缘并且增强其效果
-    img_edge = cv2.adaptiveThreshold(img_blur,255,
-                                     cv2.ADAPTIVE_THRESH_MEAN_C,
-                                     cv2.THRESH_BINARY,
-                                     blockSize=9,
-                                     C=2)
-    #转换回彩色图像
+    # 检测到边缘并且增强其效果
+    img_edge = cv2.adaptiveThreshold(
+        img_blur, 255,
+        cv2.ADAPTIVE_THRESH_MEAN_C,
+        cv2.THRESH_BINARY,
+        blockSize=9,
+        C=2,
+    )
+    # 转换回彩色图像
     img_edge = cv2.cvtColor(img_edge, cv2.COLOR_GRAY2RGB)
     img_cartoon = cv2.bitwise_and(img_color, img_edge)
     # 保存转换后的图片
