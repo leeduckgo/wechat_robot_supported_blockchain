@@ -33,4 +33,5 @@ def create_messages(name='', content='', fans_id=''):
         'context': content,
     }
     r = requests.post(url, json=data)
-    return r.status_code
+    status = r.json()['status']
+    return status

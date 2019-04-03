@@ -95,10 +95,11 @@ class Replier(object):
             content = is_leave_message.group(2).strip()  # 获取第二组内容并去除前后空格
             self.log.info('留言内容:{}'.format(content))
             status = create_messages(
-                name=msg.member.name, content=content,
+                name=msg.member.name,
+                content=content,
                 fans_id=msg.member.puid,
             )
-            if status == 200:
+            if status == "ok":
                 return 'text', '@' + msg.member.display_name + ' ' + "留言成功！点击 {} 可查看你的留言".format(
                     'http://ycy.ahasmarter.com/',
                 ), ''
