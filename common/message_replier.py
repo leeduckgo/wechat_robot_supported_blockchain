@@ -13,7 +13,7 @@ from common.rock_scissors_paper import RspGame
 from common.user import User
 from common.ycy_replier import YcyReplier
 from settings import TULING_KEY
-from utils.utils import five_minutes_later
+from utils.utils import two_minutes_later
 from utils.utils import now_to_datetime4
 
 from ..secret import api_key
@@ -38,7 +38,6 @@ class Replier(object):
         self.ycy = YcyReplier()
         self.tuling = Tuling(api_key=TULING_KEY)
         self.rsp_game_player_map = {}
-        self.rsp_game_flag = True
         self.user = User()
         self.group = Group()
         self.api_key = api_key
@@ -154,15 +153,13 @@ class Replier(object):
         :param msg:
         :return:
         """
-        if not self.rsp_game_flag:
-            return empty_result
         group_id = msg.member.group.puid
         name = msg.member.display_name
         id = msg.member.puid
         player_map = self.rsp_game_player_map
         # 如果字典中包含群组id并且 玩家id在字典中
         if player_map.get(group_id) and id in player_map.get(group_id, {}).keys():
-            is_overtime = now_to_datetime4() > five_minutes_later(player_map[id][1])
+            is_overtime = now_to_datetime4() > two_minutes_later(player_map[id][1])
             if is_overtime:
                 msg = '@' + name + ' 游戏已经超时自动终止了呀!'
                 msg.chat.send_msg(msg)

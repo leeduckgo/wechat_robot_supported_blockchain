@@ -20,5 +20,5 @@ def now_to_datetime4():
     return str_to_datetime4(format_datetime(datetime.datetime.now()))
 
 
-def five_minutes_later(dt):
-    return str_to_datetime4(format_datetime(dt)) + relativedelta(minutes=5)
+def two_minutes_later(dt):
+    return str_to_datetime4(format_datetime(dt)) + relativedelta(minutes=2)
