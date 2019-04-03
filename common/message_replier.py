@@ -16,7 +16,7 @@ from settings import TULING_KEY
 from utils.utils import two_minutes_later
 from utils.utils import now_to_datetime4
 
-from ..secret import api_key
+from secret import api_key
 
 empty_result = ('', '', '')
 
@@ -81,8 +81,11 @@ class Replier(object):
         real_msg = msg.text.split()
         respond_msg = self.ycy.reply_text(real_msg[len(real_msg) - 1])  # 超越语录无需要@
         if respond_msg:
-            return 'text', '@' + msg.member.display_name + ' ' + respond_msg, ''
+            return 'text', '@' + msg.member.name + ' ' + respond_msg, ''
         return empty_result
+
+    def set_group(self, puid):
+        self.group.set_group(puid)
 
     def handle_leave_message(self, msg):
         """
@@ -100,11 +103,11 @@ class Replier(object):
                 fans_id=msg.member.puid,
             )
             if status == "ok":
-                return 'text', '@' + msg.member.display_name + ' ' + "留言成功！点击 {} 可查看你的留言".format(
+                return 'text', '@' + msg.member.name + ' ' + "留言成功！点击 {} 可查看你的留言".format(
                     'http://ycy.ahasmarter.com/',
                 ), ''
             else:
-                return 'text', '@' + msg.member.display_name + ' ' + "留言失败！稍后再尝试吧", ''
+                return 'text', '@' + msg.member.name + ' ' + "留言失败！稍后再尝试吧", ''
         return empty_result
 
     def get_group_introduction(self, msg):
@@ -125,7 +128,7 @@ class Replier(object):
         :return:
         """
         group_id = msg.member.group.puid  # 群组唯一id
-        name = msg.member.display_name  # 玩家名
+        name = msg.member.name  # 玩家名
         id = msg.member.puid  # 玩家id
         real_msg = msg.text.split()
         if real_msg[len(real_msg) - 1] == "石头剪刀布" or real_msg[len(real_msg) - 1] == "剪刀石头布" \
@@ -141,10 +144,10 @@ class Replier(object):
                 )
             elif group_id in self.rsp_game_player_map.keys() and \
                     id not in self.rsp_game_player_map.get(group_id, {}).keys():  # 每个群只能同时运行一个游戏避免混乱
-                return 'text', '@' + msg.member.display_name + \
+                return 'text', '@' + msg.member.name + \
                        " 有玩家在玩哟,稍等一下", ''
             self.rsp_game_player_map[group_id][id][0].start(name)  # 开始游戏
-            return 'text', '@' + msg.member.display_name + \
+            return 'text', '@' + msg.member.name + \
                    " 石头剪刀布开始，你先出吧，赢了我有奖励哦(五局三胜)", ''
         return empty_result
 
@@ -155,7 +158,7 @@ class Replier(object):
         :return:
         """
         group_id = msg.member.group.puid
-        name = msg.member.display_name
+        name = msg.member.name
         id = msg.member.puid
         player_map = self.rsp_game_player_map
         # 如果字典中包含群组id并且 玩家id在字典中
@@ -168,7 +171,7 @@ class Replier(object):
 
         if player_map.get(group_id):
             if id not in player_map.get(group_id, {}).keys():  # 不是玩家的消息，不进行回应
-                return 'text', '@' + msg.member.display_name + " 先等等哦，我正在跟@" + \
+                return 'text', '@' + msg.member.name + " 先等等哦，我正在跟@" + \
                        player_map[id][2] + " 玩石头剪刀布", ''
             else:
                 cancel, result, pic = player_map[id][0].play(msg)  # 玩游戏
