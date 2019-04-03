@@ -9,7 +9,6 @@ from common.rock_scissors_paper import RspGame
 from common.communication import create_messages
 from common.communication import get_group_introduction
 from settings import TULING_KEY
-from datetime import datetime
 from utils.utils import now_to_datetime4
 from utils.utils import five_minutes_later
 
