@@ -14,6 +14,7 @@ bot.enable_puid()
 log = Logger()  # 项目logger对象
 replier = Replier()
 
+
 # === main process ===
 if __name__ == '__main__':
     # 自动接受新的好友请求

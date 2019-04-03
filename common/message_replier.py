@@ -25,6 +25,8 @@ class Replier(object):
         self.tuling = Tuling(api_key=TULING_KEY)
         self.rsp_game_player_map = {}
 
+    def set_group(self, puid):
+        self.group.set_group(puid)
     def random_img(self):
         """
         随机获取图片
