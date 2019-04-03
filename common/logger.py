@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging.handlers
-from settings import LOG_DIRECTORY, LOG_LEVEL
 import os
+
+from settings import LOG_DIRECTORY
+from settings import LOG_LEVEL
 
 
 const = {
@@ -9,7 +11,7 @@ const = {
     "DEBUG": logging.DEBUG,
     "ERROR": logging.ERROR,
     "WARNING": logging.WARNING,
-    "CRITICAL": logging.CRITICAL
+    "CRITICAL": logging.CRITICAL,
 
 }
 
@@ -32,7 +34,8 @@ class Logger(logging.Logger):
 
         # 创建一个handler，用于写入日志文件 (每天生成1个，保留30天的日志)
         fh = logging.handlers.TimedRotatingFileHandler(
-            filename, 'MIDNIGHT', 1, 30, encoding='utf-8')
+            filename, 'MIDNIGHT', 1, 30, encoding='utf-8',
+        )
         fh.suffix = "%Y-%m-%d_%H-%M.log"
         fh.setLevel(const[LOG_LEVEL])
         # 再创建一个handler，用于输出到控制台
@@ -41,7 +44,8 @@ class Logger(logging.Logger):
 
         # 定义handler的输出格式
         formatter = logging.Formatter(
-            '[%(asctime)s] - %(filename)s [Line:%(lineno)d] - [%(levelname)s]-[t:%(thread)s]-[p:%(process)s] - %(message)s')
+            '[%(asctime)s] - %(filename)s [Line:%(lineno)d] - [%(levelname)s]-[t:%(thread)s]-[p:%(process)s] - %(message)s',
+        )
         fh.setFormatter(formatter)
         ch.setFormatter(formatter)
 

@@ -1,11 +1,12 @@
-# -*- coding:utf-8 -*-
-
-
-from flask import (
-    request, make_response)
-from . import app
+# -*- coding: utf-8 -*-
 import json
+
 from functools import wraps
+
+from flask import make_response
+from flask import request
+
+from . import app
 
 # ===cross_domain====
 '''这个是允许跨域的代码'''

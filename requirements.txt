@@ -1,12 +1,13 @@
-flask
 certifi==2018.11.29
 chardet==3.0.4
+flask
 future==0.17.1
 idna==2.8
 itchat==1.2.32
+jieba
 pypng==0.0.19
 PyQRCode==1.2.1
-requests==2.21.0
+python-dateutilrequests==2.21.0
+requests
 urllib3==1.24.1
 wxpy==0.3.9.8
-jieba

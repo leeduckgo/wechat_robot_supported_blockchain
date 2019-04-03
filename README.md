@@ -11,7 +11,7 @@ YCY credit(ERC-20):[YCY](http://tokenfactory.surge.sh/#/token/0x516Ee66b9C938eDB
 
 YCY Wechat Robot just like Microsoft XiaoBing, but it can be more personalized.
 
-Every morning when you check Wechat, you will find YCY quote of the day in it. 
+Every morning when you check Wechat, you will find YCY quote of the day in it.
 
 At the same time, you can chat with YCY Wechat Robot just like chat with YCY herself. This Robort can answer in YCY's way, sing in YCY's way, which means it could be kind of **atrocious**, but who cares, all we need is YCY. YCY is amazing just the way she is.
 
@@ -21,7 +21,7 @@ YCY Token is kind of credit you can use in our platform. With the development of
 
 ## Features
 
-- Random YCY picture ([wf1314](https://github.com/wf1314)✅)
+- Random WX reply ([wf1314](https://github.com/wf1314)✅)
 - Http communication supported ([albertschr](https://github.com/albertschr) ✅)
 - Smart chat ([DawnSunshine](https://github.com/DawnSunshine))✅)
 - Little Game 1([DawnSunshine](https://github.com/DawnSunshine))✅)

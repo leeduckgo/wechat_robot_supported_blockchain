@@ -1,5 +1,4 @@
-#-*- coding:utf-8  -*-
-
+# -*- coding: utf-8 -*-
 import os
 CSRF_ENABLED = True
 SECRET_KEY = '123456'

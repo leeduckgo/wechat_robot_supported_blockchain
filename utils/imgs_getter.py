@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
 """
 获取YCY图片
 """
-import requests
 import json
-from settings import PROJECT_PATH
 import os
+
+import requests
+
+from settings import PROJECT_PATH
 
 
 class YCYImage(object):
