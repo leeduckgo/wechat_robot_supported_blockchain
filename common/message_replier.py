@@ -251,7 +251,7 @@ class Replier(object):
         friend = msg.sender
         # 向新的好友发送消息
         friend.send('你好呀,我是全村的希望!')
-        friend.send('参与内测请回复报名')
+        friend.send('参与内测看我朋友圈的图片,扫二维码加群')
         # friend.send_image('group.jpeg')
 
     def handle_group_msg(self, msg)-> tuple:
