@@ -51,8 +51,8 @@ class Replier(object):
             list_dir = os.listdir(os.path.join('resources', 'pics'))
             path = choice(list_dir)
             self.log.info('choose:-->{}'.format(path))
-            self.log.debug(path)
-            return 'img', path, ''
+            self.log.debug(os.path.join('resources', 'pics', path))
+            return 'img', os.path.join('resources', 'pics', path), ''
         return empty_result
 
     def robot_init(self, msg):
@@ -137,12 +137,12 @@ class Replier(object):
             # { 群组id : {玩家id: [游戏对象 , 开始游戏的时间, 玩家名]}}
             self.rsp_game_player_map.update(
                 {
-                    group_id: [user_id, RspGame(3), now_to_datetime4(), name],
+                    group_id: [user_id, RspGame(1), now_to_datetime4(), name],
                 },
             )
             self.rsp_game_player_map[group_id][1].start(name)  # 开始游戏
             return 'text', '@' + msg.member.name + \
-                   " 石头剪刀布开始，你先出吧，赢了我有奖励哦(3局2胜)", ''
+                   " 石头剪刀布开始，你先出吧，赢了我有奖励哦(1局定胜)", ''
         return empty_result
 
     def play_game(self, msg):
@@ -263,6 +263,10 @@ class Replier(object):
         self.log.info('receive: %s' % msg.text)
         if msg.is_at:  # 如果@到机器人，进行的回应
             typ, content1, content2 = self.robot_init(msg)  # 初始化最高优先级
+            if typ:
+                self.log.info(content1)
+                return typ, content1, content2
+            typ, content1, content2 = self.reward(msg)  # 机器人被打赏
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
