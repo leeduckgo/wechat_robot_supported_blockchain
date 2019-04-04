@@ -42,8 +42,7 @@ class Replier(object):
         self.group = Group()
         self.rsp_game_player_map = {}
 
-
-    def random_img(self, msg):
+    def random_img(self, msg)-> tuple:
         """
         随机获取图片
         :return:
@@ -56,7 +55,7 @@ class Replier(object):
             return 'img', os.path.join('resources', 'pics', path), ''
         return empty_result
 
-    def robot_init(self, msg):
+    def robot_init(self, msg)-> tuple:
         """
         机器人初始化
         :param msg:
@@ -74,7 +73,7 @@ class Replier(object):
                 return 'text', "乃不是管理员啊", ''
         return empty_result
 
-    def chaoyue_ana(self, msg):
+    def chaoyue_ana(self, msg)-> tuple:
         """
         超越语录
         :return:
@@ -88,7 +87,7 @@ class Replier(object):
     def set_group(self, puid):
         self.group.set_group(puid)
 
-    def handle_leave_message(self, msg):
+    def handle_leave_message(self, msg)-> tuple:
         """
         处理留言
         :param msg:
@@ -111,7 +110,7 @@ class Replier(object):
                 return 'text', '@' + msg.member.name + ' ' + "留言失败！稍后再尝试吧", ''
         return empty_result
 
-    def get_group_introduction(self, msg):
+    def get_group_introduction(self, msg)-> tuple:
         """
         获取群介绍
         :param msg:
@@ -122,7 +121,7 @@ class Replier(object):
             return 'text', self.group.intro, ''
         return empty_result
 
-    def finger_guessing_game(self, msg):
+    def finger_guessing_game(self, msg)-> tuple:
         """
         猜拳游戏
         :param msg:
@@ -146,7 +145,7 @@ class Replier(object):
                    " 石头剪刀布开始，你先出吧，赢了我有奖励哦(1局定胜)", ''
         return empty_result
 
-    def play_game(self, msg):
+    def play_game(self, msg)-> tuple:
         """
         游戏
         :param msg:
@@ -179,7 +178,7 @@ class Replier(object):
             return typ, content1, content2
         return empty_result
 
-    def reward(self, msg):
+    def reward(self, msg)-> tuple:
         """
         打赏
         :param msg:
@@ -198,13 +197,13 @@ class Replier(object):
             )
             if result["status"] == "success":
                 payload = '打赏成功！' + msg.member.name + " 打赏给 " + \
-                    to.name + " " + str_after_dashang[1] + "个超越积分！"
+                          to.name + " " + str_after_dashang[1] + "个超越积分！"
                 return 'text', payload, ''
             else:
                 return 'text', '打赏失败！', ''
         return empty_result
 
-    def integral(self, msg):
+    def integral(self, msg)-> tuple:
         """
         积分相关
         :return:
@@ -225,7 +224,7 @@ class Replier(object):
             return 'text', msg, ''
         return empty_result
 
-    def extra(self, msg):
+    def extra(self, msg)-> tuple:
         """
         额外添加
         :param msg:
@@ -255,23 +254,33 @@ class Replier(object):
         friend.send('参与内测请回复报名')
         # friend.send_image('group.jpeg')
 
-    def handle_group_msg(self, msg):
+    def handle_group_msg(self, msg)-> tuple:
         """
         处理群组回复消息
         :param msg:
         :return:
         """
         self.log.info('receive: %s' % msg.text)
-        if msg.is_at:  # 如果@到机器人，进行的回应
+
+        typ, content1, content2 = self.reward(msg)  # 打赏可能被@ 也可能不被@
+        if typ:
+            self.log.info(content1)
+            return typ, content1, content2
+        typ, content1, content2 = self.random_img(msg)  # 天降超越
+        if typ:
+            self.log.info(content1)
+            return typ, content1, content2
+        typ, content1, content2 = self.chaoyue_ana(msg)  # 超越语录
+        if typ:
+            self.log.info(content1)
+            return typ, content1, content2
+
+        if msg.is_at:  # 如果@到机器人，才进行的回应
             typ, content1, content2 = self.robot_init(msg)  # 初始化最高优先级
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
             typ, content1, content2 = self.play_game(msg)  # 玩游戏,高优先级,内部存在拦截其他回复
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
-            typ, content1, content2 = self.reward(msg)  # 机器人被打赏
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
@@ -294,18 +303,5 @@ class Replier(object):
             tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝")
             self.log.info(tuling_reply)
             return 'text', tuling_reply, ''
-        else:  # 未@机器人情况
-            typ, content1, content2 = self.random_img(msg)  # 天降超越
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
-            typ, content1, content2 = self.reward(msg)  # 打赏其他人
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
-            typ, content1, content2 = self.chaoyue_ana(msg)  # 超越语录
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
 
         return empty_result
