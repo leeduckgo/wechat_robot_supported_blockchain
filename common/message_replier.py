@@ -34,13 +34,14 @@ class Replier(object):
 
     def __init__(self):
         # self.group = group
+        self.api_key = api_key
         self.log = Logger()
         self.ycy = YcyReplier()
         self.tuling = Tuling(api_key=TULING_KEY)
-        self.rsp_game_player_map = {}
         self.user = User()
         self.group = Group()
-        self.api_key = api_key
+        self.rsp_game_player_map = {}
+
 
     def random_img(self, msg):
         """
@@ -266,11 +267,11 @@ class Replier(object):
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
-            typ, content1, content2 = self.reward(msg)  # 机器人被打赏
+            typ, content1, content2 = self.play_game(msg)  # 玩游戏,高优先级,内部存在拦截其他回复
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
-            typ, content1, content2 = self.play_game(msg)  # 玩游戏,高优先级,内部存在拦截其他回复
+            typ, content1, content2 = self.reward(msg)  # 机器人被打赏
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
@@ -298,7 +299,7 @@ class Replier(object):
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
-            typ, content1, content2 = self.reward(msg)  # 打赏
+            typ, content1, content2 = self.reward(msg)  # 打赏其他人
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
