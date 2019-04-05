@@ -16,6 +16,8 @@ from utils.utils import now_to_datetime4
 
 from secret import api_key,TULING_KEY
 
+from apscheduler.schedulers.background import BackgroundScheduler
+
 empty_result = ('', '', '')
 
 
@@ -49,6 +51,20 @@ class Replier(object):
         self.draw_lots_game = DrawLots()
         self.user_lots_map = {}
         self.user_lots_read_map = {}
+        '''
+        开启每日定时器，每日零时清空抽签内容
+        '''
+        self.scheduler = BackgroundScheduler()
+        self.scheduler.add_job(self.init_lots_map, 'cron',  hour = '0')
+        self.scheduler.start()
+
+    def init_lots_map(self):
+        """
+        清空抽签内容，可以重新开始抽签
+        """
+        self.user_lots_map = {}
+        self.user_lots_read_map = {}
+        self.log.info("=== Init Lots ===")
 
 
     def random_img(self, msg)-> tuple:
@@ -192,17 +208,17 @@ class Replier(object):
         user_id = msg.member.puid
         if real_msg[len(real_msg) - 1] == "抽签":          
             if user_id in self.user_lots_map:
-                return 'text', '今日你的运势签: ' + self.user_lots_map[user_id], ''
+                return 'text', '@' + msg.member.name +' 今日你的运势签: ' + self.user_lots_map[user_id], ''
             else:
                 msg1, msg2 = self.draw_lots_game.play()
                 self.user_lots_map[user_id] = msg1
                 self.user_lots_read_map[user_id] = msg2
-                return 'text', '今日你的运势签: ' + msg1, '' 
-        elif real_msg[len(real_msg) - 1] == "解读": 
+                return 'text', '@' + msg.member.name + ' 今日你的运势签: ' + msg1, '' 
+        elif real_msg[len(real_msg) - 1] == "解签": 
             if user_id in self.user_lots_read_map:
-                return 'text', self.user_lots_read_map[user_id], ''
+                return 'text', '@' + msg.member.name + ' 解签: ' + self.user_lots_read_map[user_id], ''
             else:
-                return 'text', '今日还未进行抽签哦，请@我回复抽签', ''
+                return 'text', '@' + msg.member.name + ' 今日还未进行抽签哦，请@我回复抽签', ''
         else:
             return empty_result
 
