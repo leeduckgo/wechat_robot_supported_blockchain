@@ -19,6 +19,6 @@ class DrawLots(object):
             words_dict[word[0]] = word[2]
 
     def play(self):       
-        draw_random_num = random.randint(1, 20) - 1
+        draw_random_num = random.randint(1, len(lots_dict)) - 1
         self.log.debug('draw_random_num:{}'.format(draw_random_num))
         return lots_dict[str(draw_random_num)], words_dict[str(draw_random_num)]
