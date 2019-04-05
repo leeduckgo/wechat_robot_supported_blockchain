@@ -4,13 +4,13 @@ import re
 from random import choice
 
 from wxpy import Tuling
-
 from common.communication import create_messages
 from common.group import Group
 from common.logger import Logger
 from common.rock_scissors_paper import RspGame
 from common.user import User
 from common.ycy_replier import YcyReplier
+from common.draw_lots import DrawLots
 from utils.utils import two_minutes_later
 from utils.utils import now_to_datetime4
 
@@ -46,6 +46,10 @@ class Replier(object):
         self.group = Group()
         self.rsp_game_player_map = {}
         self.bot = bot
+        self.draw_lots_game = DrawLots()
+        self.user_lots_map = {}
+        self.user_lots_read_map = {}
+
 
     def random_img(self, msg)-> tuple:
         """
@@ -183,6 +187,26 @@ class Replier(object):
             return typ, content1, content2
         return empty_result
 
+    def draw_lots(self, msg)-> tuple:
+        real_msg = msg.text.split()
+        user_id = msg.member.puid
+        if real_msg[len(real_msg) - 1] == "抽签":          
+            if user_id in self.user_lots_map:
+                return 'text', '今日你的运势签: ' + self.user_lots_map[user_id], ''
+            else:
+                msg1, msg2 = self.draw_lots_game.play()
+                self.user_lots_map[user_id] = msg1
+                self.user_lots_read_map[user_id] = msg2
+                return 'text', '今日你的运势签: ' + msg1, '' 
+        elif real_msg[len(real_msg) - 1] == "解读": 
+            if user_id in self.user_lots_read_map:
+                return 'text', self.user_lots_read_map[user_id], ''
+            else:
+                return 'text', '今日还未进行抽签哦，请@我回复抽签', ''
+        else:
+            return empty_result
+
+            
     def reward(self, msg)-> tuple:
         """
         打赏
@@ -308,6 +332,10 @@ class Replier(object):
                 else:
                     payload = ""
                 return typ, content1, content2 + payload
+            typ, content1, content2 = self.draw_lots(msg)  # 抽签
+            if typ:
+                self.log.info(content1)
+                return typ, content1, content2
             typ, content1, content2 = self.handle_leave_message(msg)  # 处理留言请求
             if typ:
                 self.log.info(content1)
