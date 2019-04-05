@@ -14,8 +14,7 @@ from common.draw_lots import DrawLots
 from utils.utils import two_minutes_later
 from utils.utils import now_to_datetime4
 
-from secret import api_key
-from secret import TULING_KEY
+from secret import api_key,TULING_KEY
 
 empty_result = ('', '', '')
 
