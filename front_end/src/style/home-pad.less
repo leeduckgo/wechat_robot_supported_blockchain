@@ -1,0 +1,366 @@
+// ipad
+@media only screen and (device-width: 768px)  {
+    .home {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        .homeBanner {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 45px 0;
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 305px;
+            background: url('../assets/images/homeBanner.jpeg') no-repeat;
+            background-size: cover;
+            box-sizing: border-box;
+            .homeBanner-title {
+                display: flex;
+                flex-direction: row;
+                .homeBanner-title-left {
+                    display: flex;
+                    flex-direction: row;
+                    width: 50%;
+                    .homeBanner-title-left-img {
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        padding: 2px;
+                        background: #ffffff;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;
+                        }
+                    }
+                    span {
+                        color: #ffffff;    
+                        line-height: 28px;
+                        margin-left: 5px;
+                        font-size: 12px;
+                    }
+                }
+                .homeBanner-title-right {
+                    width: 50%;
+                    text-align: right;
+                    overflow: hidden;
+                    span {
+                        color: #ffffff;
+                        font-size: 8px;
+                        line-height: 28px;
+                        display: inline-block;
+                        position: relative;
+                    }
+                    .leader-mobile {
+                        // margin-left: 25px;
+                        display: none;
+                    }
+                    .leader-pc {
+                        display: none;
+                    }
+                    .leader:before {
+                        content: '';
+                        width: 5px;
+                        height: 5px;
+                        background: #ffffff;
+                        border-radius: 50%;
+                        position: absolute;
+                        left: -10px;
+                        top: 12px;
+                    }
+                    .progress:before {
+                        content: '';
+                        width: 5px;
+                        height: 5px;
+                        background: #ffffff;
+                        border-radius: 50%;
+                        position: absolute;
+                        left: -10px;
+                        top: 12px;
+                    }
+                    .qrCode {
+                        width: 120px;
+                        padding: 5px 5px 3px;
+                        position: absolute;
+                        right: 170px;
+                        top: 90px;
+                        z-index:997;
+                        background: #ffffff;
+                        border-radius: 6px;
+                        opacity: 0;
+                        -webkit-transition: all .5s ease-in;
+                        -moz-transition: all .5s ease-in;
+                        transition: all .5s ease-in;
+    
+                        .iconfont {
+                            position: absolute;
+                            top: -12px;
+                            color: #ffffff;
+                            left: 58px;
+                        }
+                        img {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+            .homeBanner-content {
+                display: flex;
+                flex-direction: row;
+                margin-top: 30px;
+                .homeBanner-content-left {
+                    display: flex;
+                    flex-direction: row;
+                    width: 100%;
+                    .text-box {
+                        display: flex;
+                        flex-direction: column;
+                        width: 50%;
+                        text-align: center;
+                        justify-content: center;
+                        position: relative;
+                        right: -13%;
+                    }
+                    .whole-village-hope-pc {
+                        color: #ffffff;
+                        font-size: 14px;
+                        position: relative;
+                        display: inline-block;
+                        .versionImg {
+                            position: absolute;
+                            right: 100px;
+                            top: 0;
+                            width: 35px;
+                        }
+                    }
+                    h2 {
+                        font-size: 16px;
+                        color: #ffffff;
+                        font-weight: bold;
+                        margin-top: 6px;
+                    }
+                    .homeBanner-content-left-img {
+                        width: 50%;
+                        justify-content: center;
+                        display: flex;
+                        flex-direction: column;
+                        margin-top: 18px;
+                        text-align: left;
+                        img {
+                            width: 100px;
+                            height: 100px;
+                            border: 5px solid #ffffff;
+                            border-radius: 6px;
+                        }
+                        span {
+                            font-size: 8px;
+                            color: #ffffff;
+                            margin-top: 5px;
+                        }
+                    }
+                }
+                .homeBanner-content-right{
+                    display: none;
+                }
+            }
+        }
+        .introduce-text-left {
+            background: #ffffff;
+            padding: 37px 7% 31px;
+            display: flex;
+            flex-direction: row;
+            box-sizing: border-box;
+            .introduce-text-left-text {
+                width: 47%;
+                display: flex;
+                flex-direction: column;
+                text-align: left;
+                margin-left: 8%;
+                h2 {
+                    color: #333333;
+                    font-size: 14px;
+                    margin-bottom: 18px;
+                    margin-top: 10px;
+                }
+                p {
+                    color: #858585;
+                    font-size: 10px;
+                    line-height: 16px;
+                }
+                .toGitHub {
+                    background: #207DFE;
+                    color: #ffffff;
+                    border-radius: 12px;
+                    text-align: center;
+                    padding: 2px 0px;
+                    width: 150px;
+                    margin-top: 10px;
+                    font-size: 8px;
+                }
+            }
+            .introduce-text-left-img {
+                width: 45%;
+                text-align: left;
+                img {
+                    width: 100%;
+                    border-radius: 12px;
+                }
+            }
+        }
+        .introduce-text-right {
+            background: #f8faff;
+            padding: 23px 7% 27px;
+            display: flex;
+            flex-direction: row;
+            box-sizing: border-box;
+            .introduce-text-right-text {
+                width: 45%;
+                display: flex;
+                flex-direction: column;
+                text-align: left;
+                h2 {
+                    color: #333333;
+                    font-size: 14px;
+                    margin-bottom: 8px;
+                    margin-top: 39px;
+                    font-weight: bold;
+                }
+                p {
+                    color: #858585;
+                    font-size: 10px;
+                    line-height: 18px;
+                }
+            }
+            .introduce-text-right-img {
+                width: 45%;
+                text-align: left;
+                margin-left: 10%;
+                img {
+                    width: 90%;
+                    border-radius: 12px;
+                    max-width: 98%;
+                }
+            }
+        }
+        .messageBoard {
+            background: #E4EBFC;
+            padding: 30px 7%;
+            .messageBoard-title {
+                h2 {
+                    color: #333333;
+                    font-size: 17px;
+                }
+                p {
+                    color: #ffffff;
+                    background: #207DFE;
+                    padding: 2px 10px;
+                    border-radius: 20px;
+                    display: inline-block;
+                    font-size: 7px;
+                    margin-top: 10px;
+                    cursor: pointer;
+                }
+            }
+            .messageBoard-content {
+                column-gap: 10px;
+                column-count: 3;
+                margin-top: 36px;
+                .item {
+                    border: 1px solid #ffffff;
+                    background: #ffffff;
+                    border-radius: 12px;
+                    box-shadow: 0 2px 3px rgba(0,0,0,0.15);
+                    padding: 10px;
+                    text-align: left;
+                    margin-bottom: 10px;
+                    break-inside: avoid;
+                    overflow: hidden;
+                     h2 {
+                         color: #333333;
+                     }
+                     span {
+                         color: #858585;
+                         font-size: 10px;
+                         display: block;
+                    }
+                    .hopeBtn {
+                        background: #207DFE;
+                        padding: 1px 7px;
+                        border-radius: 20px;
+                        display: inline-block;
+                        font-size: 10px;
+                        margin-top: 5px;
+                        color: #ffffff;
+                        float: right;
+
+                    }
+                }
+            }
+        }
+        .dialogBg {
+            width: 100%;
+            height: 100%;
+            z-index: 998;
+            background: rgba(0,0,0,0.5);
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        .messageDialog {
+            width: 70%;
+            height: 30%;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 3px #E4EBFC;
+            z-index:999;
+            position: fixed;
+            left: 15%;
+            top: 25%;
+            padding: 10px;
+            .messageDialog-title {
+                padding: 6px;
+                font-size: 18px;
+                color: #333333;
+                // font-weight: bold;
+                position: relative;
+                .closeDialog {
+                    position: absolute;
+                    right: -5px;
+                    top: -5px;
+                    cursor: pointer;
+                    .iconfont {
+                        font-size: 30px;
+                        color: #dedede;
+                    }
+                }   
+            }
+            .messageDialog-textarea {
+                width: 100%;
+                height: 65%;
+                #message-textarea {
+                    width: 100%;
+                    height: 100%;
+                    border: 1px solid #ededed;
+                    border-radius: 6px;
+                    padding: 6px;
+                    box-sizing: border-box;
+                    font-size: 14px;
+                }
+            }
+            .messageDialog-sendBtn {
+                width: 28%;
+                height: 26px;
+                line-height: 26px;
+                border-radius: 12px;
+                border: 1px solid #ededed;
+                margin: 0 auto;
+                margin-top: 10px;
+                background: #207DFE;
+                button {
+                    background: #207DFE;
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+}
