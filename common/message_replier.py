@@ -287,8 +287,7 @@ class Replier(object):
                         "- 超越猜拳\n" + \
                         "- 村头留言板\n" + \
                         "- 超越抽签\n" + \
-                        "- 成语接龙\n" + \
-                    
+                        "- 成语接龙\n"     
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
             payload = "https://ke.qq.com/course/392391?tuin=ce503a40 ⬅ 欢迎猛戳链接投票"
