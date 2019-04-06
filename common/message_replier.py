@@ -51,6 +51,8 @@ class Replier(object):
         self.draw_lots_game = DrawLots()
         self.user_lots_map = {}
         self.user_lots_read_map = {}
+        self.answer = ""
+        self.red_bag_num = 0
         '''
         开启每日定时器，每日零时清空抽签内容
         '''
@@ -87,16 +89,32 @@ class Replier(object):
         :return:
         """
         real_msg = msg.text.split()
-        if real_msg[len(real_msg) - 1] == "初始化":
-            if msg.member.puid == self.group.admin_puid:  # 如果是管理员
+        if msg.member.puid == self.group.admin_puid:  # 如果是管理员
+            if real_msg[len(real_msg) - 1] == "初始化":
                 self.log.info(msg.sender)
                 # self.group.update_group(msg.sender, self.api_key)
                 self.user.update_users(msg.sender, self.api_key)
                 self.log.info("初始化完成！")
                 return 'text', "初始化完成！", ''
-            else:
-                return 'text', "乃不是管理员啊", ''
+            # else:
+            #     print("口令红包应该在这里")
+            elif real_msg[1] == "口令红包":
+                self.log.info("设置口令红包！")
+                print("===口令红包信息===")
+                print(real_msg[2])
+                print(real_msg[3])
+                try:
+                    self.red_bag_num = int(real_msg[2])
+                except:
+                    self.red_bag_num = 0
+                self.answer = real_msg[3]
+                return 'text', "口令红包设置完成！", ''
         return empty_result
+
+    def update_user_info(self, msg):
+        self.log.info("更新用户信息中……")
+        self.user.update_users(msg.sender, self.api_key)
+        self.log.info("用户信息更新完毕……")
 
     def chaoyue_ana(self, msg)-> tuple:
         """
@@ -213,6 +231,22 @@ class Replier(object):
             return typ, content1, content2
         return empty_result"""
 
+    def red_bag(self, msg)-> tuple:
+        real_msg = msg.text.split()
+        if self.red_bag_num == 0: #如果红包剩余数量为 0
+            self.answer = "" # answer清零
+        else:
+            if real_msg[len(real_msg) - 1] == self.answer:
+                user_puid = msg.member.puid
+                bot_id = self.bot.self.puid
+                result = self.user.transfer(user_puid, bot_id, 1, self.api_key)
+                self.red_bag_num -=1
+                if result["status"] == "success":
+                    return 'text'," 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
+                else:
+                    return 'text','红包领完啦！',''
+        return empty_result
+
     def draw_lots(self, msg)-> tuple:
         real_msg = msg.text.split()
         user_id = msg.member.puid
@@ -288,8 +322,8 @@ class Replier(object):
         :return:
         """
         real_msg = msg.text.split()
-        if real_msg[len(real_msg) - 1] == "致谢":
-            return 'text', "感谢「心理医生聪」，提供超越语录的支持！", ''
+        if real_msg[len(real_msg) - 1] in ["致谢","鸣谢"]:
+            return 'text', "感谢「心理医生聪」与「禹sen」，提供超越语录的支持！", ''
         if real_msg[len(real_msg) - 1] in ["帮助","?","？"]:
             payload = "本 AI 目前支持以下功能: \n" + \
                         "- 超越积分\n" + \
@@ -332,6 +366,17 @@ class Replier(object):
         if typ:
             self.log.info(content1)
             return typ, content1, content2
+        
+        typ, content1, content2 = self.robot_init(msg)  # 紧急情况下的初始化 以及口令红包的初始化
+        if typ:
+            self.log.info(content1)
+            return typ, content1, content2
+        
+        typ, content1, content2 = self.red_bag(msg)  # 口令红包
+        if typ:
+            self.log.info(content1)
+            return typ, content1, content2
+        
         typ, content1, content2 = self.random_img(msg)  # 天降超越
         if typ:
             self.log.info(content1)
@@ -342,10 +387,6 @@ class Replier(object):
             return typ, content1, content2
 
         if msg.is_at:  # 如果@到机器人，才进行的回应
-            typ, content1, content2 = self.robot_init(msg)  # 初始化最高优先级
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
             typ, content1, content2 = self.play_game(msg)  # 玩游戏,高优先级,内部存在拦截其他回复
             if typ:
                 self.log.info(content1)
