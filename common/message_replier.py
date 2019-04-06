@@ -282,10 +282,13 @@ class Replier(object):
             return 'text', "感谢「心理医生聪」，提供超越语录的支持！", ''
         if real_msg[len(real_msg) - 1] in ["帮助","?","？"]:
             payload = "本 AI 目前支持以下功能: \n" + \
-                      "- 超越积分\n" + \
-                      "- 天降超越\n" + \
-                      "- 超越猜拳\n" + \
-                      "- 村头留言板\n"
+                        "- 超越积分\n" + \
+                        "- 天降超越\n" + \
+                        "- 超越猜拳\n" + \
+                        "- 村头留言板\n" + \
+                        "- 超越抽签\n" + \
+                        "- 成语接龙\n" + \
+                    
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
             payload = "https://ke.qq.com/course/392391?tuin=ce503a40 ⬅ 欢迎猛戳链接投票"
