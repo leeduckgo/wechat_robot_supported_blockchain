@@ -177,8 +177,8 @@ class Replier(object):
         :return:
         """
         real_msg = msg.text.split()
-        if real_msg[len(real_msg) - 1] == "石头" or real_msg[len(real_msg) - 1] == "剪刀" \
-                or real_msg[len(real_msg) - 1] == "布":
+        if "石头" in real_msg[len(real_msg) - 1]  or  "剪刀" in real_msg[len(real_msg) - 1]  \
+                or "布" in real_msg[len(real_msg) - 1]:
             game = RspGame(1)
             game.start(msg.member.name)
             cancel, result, pic = game.play(msg)

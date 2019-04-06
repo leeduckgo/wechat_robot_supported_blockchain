@@ -69,7 +69,7 @@ class RspGame(object):
         if str.find(valid_msg, "不玩") != -1 or str.find(valid_msg, "退出") != -1:
             return 1, '@' + self.player_name + " 虽然半途而废不怎么好听，但有时候放弃也是一种聪明的选择", self.random_img(3)
         elif valid_msg != "石头" and valid_msg != "剪刀" and valid_msg != "布":
-            return 0, '@' + self.player_name + " 不遵守游戏规则，会被我拉人黑名单", self.random_img(3)
+            return 0, '@' + self.player_name + " 你这是要跟我石头剪刀布吗？", self.random_img(3)
         random_num = random.randint(1, 3) - 1
         self.log.debug('random_num:{}'.format(random_num))
         self.log.debug('msg_code:{}'.format(self.msg_code[valid_msg]))
