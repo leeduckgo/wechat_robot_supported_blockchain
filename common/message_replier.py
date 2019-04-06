@@ -185,7 +185,7 @@ class Replier(object):
             is_overtime = now_to_datetime4() > two_minutes_later(player_map[group_id][2])
             self.log.info('游戏是否超时:%s' % is_overtime)
             if is_overtime:
-                msg = '@' + player_map[group_id][3] + ' 游戏已经超时自动终止了呀!'
+                msg = '@' + str(player_map[group_id][3]) + ' 游戏已经超时自动终止了呀!'
                 msg.chat.send_msg(msg)
                 player_map.pop(group_id)  # 超时删除群组id对应的字典
         if player_map.get(group_id):  # 超时可能会pop掉该key,需要重新判断
