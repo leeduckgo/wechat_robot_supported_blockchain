@@ -176,6 +176,16 @@ class Replier(object):
         :param msg:
         :return:
         """
+        real_msg = msg.text.split()
+        if real_msg[len(real_msg) - 1] == "石头" or real_msg[len(real_msg) - 1] == "剪刀" \
+                or real_msg[len(real_msg) - 1] == "布":
+            game = RspGame(1)
+            game.start(msg.member.name)
+            cancel, result, pic = game.play(msg)
+            return 'both', pic, result
+        else:
+            return empty_result
+        """
         group_id = msg.member.group.puid
         user_id = msg.member.puid
         player_map = self.rsp_game_player_map
@@ -201,7 +211,7 @@ class Replier(object):
         typ, content1, content2 = self.finger_guessing_game(msg)  # 猜拳游戏
         if typ == 'text':
             return typ, content1, content2
-        return empty_result
+        return empty_result"""
 
     def draw_lots(self, msg)-> tuple:
         real_msg = msg.text.split()
@@ -287,7 +297,7 @@ class Replier(object):
                         "- 超越猜拳\n" + \
                         "- 村头留言板\n" + \
                         "- 超越抽签\n" + \
-                        "- 成语接龙\n" + \
+                        "- 成语接龙\n"
                     
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
@@ -339,17 +349,34 @@ class Replier(object):
             typ, content1, content2 = self.play_game(msg)  # 玩游戏,高优先级,内部存在拦截其他回复
             if typ:
                 self.log.info(content1)
-                if "游戏结束，恭喜你赢了" in content2:
-                    from_puid = self.bot.self.puid
-                    print(from_puid)
-                    to = msg.member
-                    result = self.user.transfer(from_puid, to.puid, 5, self.api_key)
-                    if result["status"] == "success":
-                        payload = "奖励给 " + to.name + " 3 个超越积分！"
-                    else:
-                        payload = "但是我没钱啦~"
+                user_puid = msg.member.puid
+                bot_id = self.bot.self.puid
+                user_balance = self.user.get_balance_by_puid(user_puid)
+                bot_balance = self.user.get_balance_by_puid(bot_id)
+                if user_balance < 3:
+                    payload = " 由于你余额不足 3 积分，所以本次游戏没有奖惩哦~"
+                elif bot_balance < 3:
+                    payload = " 超越宝宝的钱包瘪了，所以本次游戏没有奖惩哦~"
                 else:
-                    payload = ""
+                    if "游戏结束，恭喜你赢了" in content2:
+                        from_puid = bot_id
+                        print(from_puid)
+                        to_puid = user_puid
+                        result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
+                        if result["status"] == "success":
+                            payload = " 奖励给 " + msg.member.name + " 3 个超越积分！"
+                        else:
+                            payload = " 但是我没钱啦~"
+                    elif "你输了" in content2:
+                        from_puid = user_puid
+                        to_puid = bot_id
+                        result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
+                        if result["status"] == "success":
+                            payload = " 扣除 " + msg.member.name + " 3 个超越积分！"
+                        else:
+                            payload = " 你钱不够，接下来的游戏会没有奖励哦~"
+                    else:
+                        payload = ""
                 return typ, content1, content2 + payload
             typ, content1, content2 = self.draw_lots(msg)  # 抽签
             if typ:

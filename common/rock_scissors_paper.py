@@ -43,27 +43,15 @@ class RspGame(object):
         if winer == 1:
             self.player_score += 1
             if self.player_score == (self.game_all_num + 1) / 2:
-                return 1, '@' + self.player_name + self.over_msg[1] + " 总比分：{}-{}".format(
-                    self.com_score,
-                    self.player_score,
-                )
+                return 1, '@' + self.player_name + self.over_msg[1]
             else:
-                return 0, '@' + self.player_name + self.fail_msg + " 目前比分：{}-{}".format(
-                    self.com_score,
-                    self.player_score,
-                )
+                return 0, '@' + self.player_name + self.fail_msg
         elif winer == -1:
             self.com_score += 1
             if self.com_score == (self.game_all_num + 1) / 2:
-                return 1, '@' + self.player_name + self.over_msg[0] + " 总比分：{}-{}".format(
-                    self.com_score,
-                    self.player_score,
-                )
+                return 1, '@' + self.player_name + self.over_msg[0]
             else:
-                return 0, '@' + self.player_name + self.win_msg + " 目前比分：{}-{}".format(
-                    self.com_score,
-                    self.player_score,
-                )
+                return 0, '@' + self.player_name + self.win_msg
 
     def play(self, msg):
         """
@@ -88,10 +76,7 @@ class RspGame(object):
         # 1：玩家 -1：机器人 0：平局
         winer = (random_num - self.msg_code[valid_msg] + 4) % 3 - 1
         if winer == 0:
-            return 0, '@' + self.player_name + self.draw_msg + " 目前比分：{}-{}".format(
-                self.com_score,
-                self.player_score,
-            ), self.random_img(random_num)
+            return 0, '@' + self.player_name + self.draw_msg, self.random_img(random_num)
         else:
             can, res_msg = self.get_result(winer)
             return can, res_msg, self.random_img(random_num)
