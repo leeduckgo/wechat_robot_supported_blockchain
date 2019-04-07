@@ -82,7 +82,8 @@ class Replier(object):
         """
         print("===天降超越===")
         print(msg.text)
-        if msg.text in ["天降超越", "天将超越"]:  # todo 待增加
+
+        if "天降超越" in msg.text or "天将超越" in msg.text:# todo 待增加
             list_dir = os.listdir(os.path.join('resources', 'pics'))
             path = choice(list_dir)
             self.log.info('choose:-->{}'.format(path))
@@ -149,6 +150,8 @@ class Replier(object):
         :param msg:
         :return:
         """
+        if "村头留言板" in msg.text:
+            return "text", "@我并回复:「留言:你想说的话」，则可在村头留言板上留下你的留言内容哦", ""
         is_leave_message = re.search(r'(留言:|留言：)(.*)', msg.text)
         if is_leave_message:
             content = is_leave_message.group(2).strip()  # 获取第二组内容并去除前后空格
@@ -207,6 +210,8 @@ class Replier(object):
         :param msg:
         :return:
         """
+        if "超越猜拳" in msg.text:
+            return "text", "@我并回复你的出招(比如「剪刀」)就能跟我玩猜拳游戏，赢了我会奖励3积分，输了扣除3积分，如果积分不够则不会进行奖惩", ""
         real_msg = msg.text.split()
         if "石头" in real_msg[len(real_msg) - 1]  or  "剪刀" in real_msg[len(real_msg) - 1]  \
                 or "布" in real_msg[len(real_msg) - 1]:
@@ -245,6 +250,8 @@ class Replier(object):
         return empty_result"""
 
     def red_bag(self, msg)-> tuple:
+        if "口令红包" in msg.text:
+            return "text", "管理员会在某些时间在群里发出超越百科抢答红包，回答正确会得到超越积分，多多留意~", "" 
         real_msg = msg.text.split()
         if self.red_bag_num == 0: #如果红包剩余数量为 0
             self.answer = "" # answer清零
@@ -261,6 +268,8 @@ class Replier(object):
         return empty_result
 
     def draw_lots(self, msg)-> tuple:
+        if "超越抽签" in msg.text:
+            return "text", "每日0点过后，@我并回复「抽签」，可以抽出你当日的运势签，@我并回复「解签」会解释抽签内容~", "" 
         real_msg = msg.text.split()
         user_id = msg.member.puid
         if real_msg[len(real_msg) - 1] == "抽签":          
@@ -312,7 +321,7 @@ class Replier(object):
         """
         real_msg = msg.text.split()
         if real_msg[len(real_msg) - 1] == "超越积分":
-            msg = "超越积分可以用来干很多好玩的事情。"
+            msg = "超越积分可以用来干很多好玩的事情，后续推出虚拟房产和虚拟商店，可作为购买力进行交易哦，还支持个人打赏，@我并回复「余额」来查看你的积分总额。"
             return 'text', msg, ''
         if real_msg[len(real_msg) - 1] in ["余额", "积分"]:
             user_puid = msg.member.puid
