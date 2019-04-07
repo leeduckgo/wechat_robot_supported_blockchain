@@ -249,7 +249,7 @@ class Replier(object):
         if self.red_bag_num == 0: #如果红包剩余数量为 0
             self.answer = "" # answer清零
         else:
-            if self.answer in real_msg[len(real_msg) - 1] :
+            if self.answer == real_msg[len(real_msg) - 1] and msg.is_at:
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
                 result = self.user.transfer(bot_id, user_puid, 1, self.api_key)
@@ -453,7 +453,7 @@ class Replier(object):
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
-            tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝").replace("清华大学硕士杨超？", "杨超越最美不允许反驳")
+            tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝").replace("清华大学硕士杨超？", "杨超越最美不允许反驳").replace("你接错了", "我不会接")
             self.log.info(tuling_reply)
             return 'text', tuling_reply, ''
 
