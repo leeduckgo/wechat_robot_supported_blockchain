@@ -32,6 +32,12 @@ class Replier(object):
         5: "合格的成年村民",
     }
 
+    q_a_list = {
+        "生日": ["杨超越的生日是什么时候 a)7月20 b)7月21 c)7月22", "a"],
+        "演艺": ["杨超越获得了哪年的演艺人物奖？a)2017 b)2018 c)2019", "b"],
+        "主食": ["杨超越最新欢的主食是？a)土豆 b)米饭 c)燕麦片", "b"]
+    }
+
     jokes = [
         '''美国外交代表团到苏联访问，苏修接待官员陪他们参观“建设的伟大成就”，并且得意的说：“到了下一个五年计划，每个苏联家庭都可以拥有一架私人飞机！”\n美国人惊讶的问：“ 他们要飞机干什么呢？”\n苏修官员说：“当然有用啊……譬如你在莫斯科听说列宁格勒开始供应面包了，你可以马上开飞机赶去排队啊。''',
         '''斯大林、赫鲁晓夫和勃列日涅夫乘坐火车出门。开着开着，火车突然停了。\n斯大林把头伸出车窗外，怒吼道：“枪毙火车司机！”可是车还是没有动。\n接着赫鲁晓夫说：“给火车司机恢复名誉！”车仍然没有动。\n勃列日涅夫说：“同志们，不如拉上窗帘，坐在座位上自己摇动身体，做出列车还在前进的样子……”''',
@@ -74,7 +80,9 @@ class Replier(object):
         随机获取图片
         :return:
         """
-        if msg.text in ("天降超越",):  # todo 待增加
+        print("===天降超越===")
+        print(msg.text)
+        if msg.text in ["天降超越", "天将超越"]:  # todo 待增加
             list_dir = os.listdir(os.path.join('resources', 'pics'))
             path = choice(list_dir)
             self.log.info('choose:-->{}'.format(path))
@@ -89,15 +97,13 @@ class Replier(object):
         :return:
         """
         real_msg = msg.text.split()
-        if msg.member.puid == self.group.admin_puid:  # 如果是管理员
+        if msg.member.puid == self.group.admin_puid and len(real_msg) != 1:  # 如果是管理员
             if real_msg[len(real_msg) - 1] == "初始化":
                 self.log.info(msg.sender)
                 # self.group.update_group(msg.sender, self.api_key)
                 self.user.update_users(msg.sender, self.api_key)
                 self.log.info("初始化完成！")
                 return 'text', "初始化完成！", ''
-            # else:
-            #     print("口令红包应该在这里")
             elif real_msg[1] == "口令红包":
                 self.log.info("设置口令红包！")
                 print("===口令红包信息===")
@@ -107,8 +113,15 @@ class Replier(object):
                     self.red_bag_num = int(real_msg[2])
                 except:
                     self.red_bag_num = 0
-                self.answer = real_msg[3]
-                return 'text', "口令红包设置完成！", ''
+                if real_msg[3] in self.q_a_list:
+                    item = self.q_a_list[real_msg[3]]
+                    self.answer = item[1]
+                    return 'text', item[0], ''
+                else:
+                    self.answer = real_msg[3]
+                    return 'text', "口令红包设置完成！", ''
+            else:
+                return empty_result
         return empty_result
 
     def update_user_info(self, msg):
@@ -236,7 +249,7 @@ class Replier(object):
         if self.red_bag_num == 0: #如果红包剩余数量为 0
             self.answer = "" # answer清零
         else:
-            if real_msg[len(real_msg) - 1] == self.answer:
+            if self.answer in real_msg[len(real_msg) - 1] :
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
                 result = self.user.transfer(user_puid, bot_id, 1, self.api_key)
@@ -371,7 +384,6 @@ class Replier(object):
         if typ:
             self.log.info(content1)
             return typ, content1, content2
-        
         typ, content1, content2 = self.red_bag(msg)  # 口令红包
         if typ:
             self.log.info(content1)
@@ -381,6 +393,7 @@ class Replier(object):
         if typ:
             self.log.info(content1)
             return typ, content1, content2
+        
         typ, content1, content2 = self.chaoyue_ana(msg)  # 超越语录
         if typ:
             self.log.info(content1)
