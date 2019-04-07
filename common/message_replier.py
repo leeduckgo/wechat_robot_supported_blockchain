@@ -176,7 +176,7 @@ class Replier(object):
         :return:
         """
         real_msg = msg.text.split()
-        if real_msg[len(real_msg) - 1] == "群信息":
+        if real_msg[len(real_msg) - 1] == "群信息" or real_msg[len(real_msg) - 1] == "群简介":
             return 'text', self.group.intro, ''
         return empty_result
 
