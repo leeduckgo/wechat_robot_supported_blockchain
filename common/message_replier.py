@@ -344,7 +344,8 @@ class Replier(object):
                         "- 超越猜拳\n" + \
                         "- 村头留言板\n" + \
                         "- 超越抽签\n" + \
-                        "- 成语接龙\n"
+                        "- 超越接龙\n" + \
+                        "- 口令红包（管理员功能）"
                     
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
