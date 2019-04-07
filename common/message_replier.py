@@ -252,7 +252,7 @@ class Replier(object):
             if self.answer in real_msg[len(real_msg) - 1] :
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
-                result = self.user.transfer(user_puid, bot_id, 1, self.api_key)
+                result = self.user.transfer(bot_id, user_puid, 1, self.api_key)
                 self.red_bag_num -=1
                 if result["status"] == "success":
                     return 'text'," 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
