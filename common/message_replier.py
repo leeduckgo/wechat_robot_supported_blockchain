@@ -412,6 +412,7 @@ class Replier(object):
     @property
     def at_or_not_at_list(self) -> list:
         """
+        优先级: at_or_not_at_list > only_at_list = only_not_at_list
         无论是否被@都会执行,最高优先级
         根据优先级排列顺序
         :return:
