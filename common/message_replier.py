@@ -61,6 +61,7 @@ def extend_finger_guessing(func):
 
     return inner
 
+
 class Replier(object):
     """消息回复"""
 
@@ -102,7 +103,7 @@ class Replier(object):
 
         # 开启每日定时器，每日零时清空抽签内容
         self.scheduler = BackgroundScheduler()
-        self.scheduler.add_job(self.init_lots_map, 'cron',  hour='0')
+        self.scheduler.add_job(self.init_lots_map, 'cron', hour='0')
         self.scheduler.start()
 
     def init_lots_map(self):
@@ -113,7 +114,7 @@ class Replier(object):
         self.user_lots_read_map = {}
         self.log.debug("=== Init Lots ===")
 
-    def random_img(self, msg)-> tuple:
+    def random_img(self, msg) -> tuple:
         """
         随机获取图片
         :return:
@@ -121,7 +122,7 @@ class Replier(object):
         self.log.debug("===天降超越===")
         self.log.debug(msg.text)
 
-        if "天降超越" in msg.text or "天将超越" in msg.text:# todo 待增加
+        if "天降超越" in msg.text or "天将超越" in msg.text:  # todo 待增加
             list_dir = os.listdir(os.path.join('resources', 'pics'))
             path = choice(list_dir)
             self.log.debug('choose:-->{}'.format(path))
@@ -129,7 +130,7 @@ class Replier(object):
             return 'img', os.path.join('resources', 'pics', path), ''
         return empty_result
 
-    def robot_init(self, msg)-> tuple:
+    def robot_init(self, msg) -> tuple:
         """
         机器人初始化
         :param msg:
@@ -168,7 +169,7 @@ class Replier(object):
         self.user.update_users(msg)
         self.log.debug("用户信息更新完毕……")
 
-    def chaoyue_ana(self, msg)-> tuple:
+    def chaoyue_ana(self, msg) -> tuple:
         """
         超越语录
         :return:
@@ -179,10 +180,10 @@ class Replier(object):
             return 'text', '@' + msg.member.name + ' ' + respond_msg, ''
         return empty_result
 
-    def set_group(self, puid):
-        self.group.set_group(puid)
+    # def set_group(self, puid):
+    #     self.group.set_group(puid)
 
-    def handle_leave_message(self, msg)-> tuple:
+    def handle_leave_message(self, msg) -> tuple:
         """
         处理留言
         :param msg:
@@ -207,7 +208,7 @@ class Replier(object):
                 return 'text', '@' + msg.member.name + ' ' + "留言失败！稍后再尝试吧", ''
         return empty_result
 
-    def get_group_introduction(self, msg)-> tuple:
+    def get_group_introduction(self, msg) -> tuple:
         """
         获取群介绍
         :param msg:
@@ -218,10 +219,8 @@ class Replier(object):
             return 'text', self.group.intro, ''
         return empty_result
 
-
-
     @extend_finger_guessing
-    def finger_guessing_game(self, msg)-> tuple:
+    def finger_guessing_game(self, msg) -> tuple:
         """
         猜拳游戏
         :param msg:
@@ -230,7 +229,7 @@ class Replier(object):
         if "超越猜拳" in msg.text:
             return "text", "@我并回复你的出招(比如「剪刀」)就能跟我玩猜拳游戏，赢了我会奖励3积分，输了扣除3积分，如果积分不够则不会进行奖惩", ""
         real_msg = msg.text.split()
-        if "石头" in real_msg[len(real_msg) - 1] or "剪刀" in real_msg[len(real_msg) - 1]  \
+        if "石头" in real_msg[len(real_msg) - 1] or "剪刀" in real_msg[len(real_msg) - 1] \
                 or "布" in real_msg[len(real_msg) - 1]:
             game = RspGame(1)
             game.start(msg.member.name)
@@ -284,9 +283,15 @@ class Replier(object):
     #         return typ, content1, content2
     #     return empty_result"""
 
-    def red_bag(self, msg)-> tuple:
+    def red_bag(self, msg) -> tuple:
+        """
+        口令红包
+        :param msg:
+        :return:
+        """
+
         if "口令红包" in msg.text:
-            return "text", "管理员会在某些时间在群里发出超越百科抢答红包，回答正确会得到超越积分，多多留意~", "" 
+            return "text", "管理员会在某些时间在群里发出超越百科抢答红包，回答正确会得到超越积分，多多留意~", ""
         real_msg = msg.text.split()
         if self.red_bag_num == 0:  # 如果红包剩余数量为0
             self.answer = ""  # answer清零
@@ -299,23 +304,28 @@ class Replier(object):
                 if result["status"] == "success":
                     return 'text', " 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
                 else:
-                    return 'text', '红包领完啦！',''
+                    return 'text', '红包领完啦！', ''
         return empty_result
 
-    def draw_lots(self, msg)-> tuple:
+    def draw_lots(self, msg) -> tuple:
+        """
+        超越抽签
+        :param msg:
+        :return:
+        """
         if "超越抽签" in msg.text:
-            return "text", "每日0点过后，@我并回复「抽签」，可以抽出你当日的运势签，@我并回复「解签」会解释抽签内容~", "" 
+            return "text", "每日0点过后，@我并回复「抽签」，可以抽出你当日的运势签，@我并回复「解签」会解释抽签内容~", ""
         real_msg = msg.text.split()
         user_id = msg.member.puid
-        if real_msg[len(real_msg) - 1] == "抽签":          
+        if real_msg[len(real_msg) - 1] == "抽签":
             if user_id in self.user_lots_map:
-                return 'text', '@' + msg.member.name +' 今日你的运势签: ' + self.user_lots_map[user_id], ''
+                return 'text', '@' + msg.member.name + ' 今日你的运势签: ' + self.user_lots_map[user_id], ''
             else:
                 msg1, msg2 = self.draw_lots_game.play()
                 self.user_lots_map[user_id] = msg1
                 self.user_lots_read_map[user_id] = msg2
-                return 'text', '@' + msg.member.name + ' 今日你的运势签: ' + msg1, '' 
-        elif real_msg[len(real_msg) - 1] == "解签": 
+                return 'text', '@' + msg.member.name + ' 今日你的运势签: ' + msg1, ''
+        elif real_msg[len(real_msg) - 1] == "解签":
             if user_id in self.user_lots_read_map:
                 return 'text', '@' + msg.member.name + ' 解签: ' + self.user_lots_read_map[user_id], ''
             else:
@@ -323,7 +333,7 @@ class Replier(object):
         else:
             return empty_result
 
-    def reward(self, msg)-> tuple:
+    def reward(self, msg) -> tuple:
         """
         打赏
         :param msg:
@@ -348,7 +358,7 @@ class Replier(object):
                 return 'text', '打赏失败！', ''
         return empty_result
 
-    def integral(self, msg)-> tuple:
+    def integral(self, msg) -> tuple:
         """
         积分相关
         :return:
@@ -371,7 +381,7 @@ class Replier(object):
             return 'text', msg, ''
         return empty_result
 
-    def extra(self, msg)-> tuple:
+    def extra(self, msg) -> tuple:
         """
         额外添加
         :param msg:
@@ -382,14 +392,14 @@ class Replier(object):
             return 'text', "感谢「心理医生聪」与「禹sen」，提供超越语录的支持！", ''
         if real_msg[len(real_msg) - 1] in ["帮助", "?", "？"]:
             payload = "本 AI 目前支持以下功能: \n" + \
-                        "- 超越积分\n" + \
-                        "- 天降超越\n" + \
-                        "- 超越猜拳\n" + \
-                        "- 村头留言板\n" + \
-                        "- 超越抽签\n" + \
-                        "- 超越接龙\n" + \
-                        "- 口令红包（管理员功能）"
-                    
+                      "- 超越积分\n" + \
+                      "- 天降超越\n" + \
+                      "- 超越猜拳\n" + \
+                      "- 村头留言板\n" + \
+                      "- 超越抽签\n" + \
+                      "- 超越接龙\n" + \
+                      "- 口令红包（管理员功能）"
+
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
             payload = "https://ke.qq.com/course/392391?tuin=ce503a40 ⬅ 欢迎猛戳链接投票"
@@ -412,7 +422,23 @@ class Replier(object):
         # friend.send_image('group.jpeg')
 
     @property
-    def is_at_list(self)-> list:
+    def at_or_not_at_list(self) -> list:
+        """
+        无论是否被@都会执行
+        根据优先级排列顺序
+        :return:
+        """
+        funcs = [
+            self.robot_init,  # 紧急情况下的初始化以及口令红包的初始化
+            self.reward,  # 打赏可能被@ 也可能不被@
+            self.red_bag,  # 口令红包
+            self.random_img,  # 天降超越
+            self.chaoyue_ana,  # 超越语录
+        ]
+        return funcs
+
+    @property
+    def is_at_list(self) -> list:
         """
         被@时触发的功能,优先级小于not_at_list
         根据优先级排列顺序
@@ -430,22 +456,18 @@ class Replier(object):
         return funcs
 
     @property
-    def not_at_list(self)-> list:
+    def only_not_at_list(self) -> list:
         """
-        未被@时触发的功能
+        仅未被@时触发的功能优先级等于is_at_list
         根据优先级排列顺序
         :return:
         """
         funcs = [
-            self.robot_init,  #紧急情况下的初始化 以及口令红包的初始化
-            self.reward,  # 打赏可能被@ 也可能不被@
-            self.red_bag,   # 口令红包
-            self.random_img,  # 天降超越
-            self.chaoyue_ana,  # 超越语录
+            # self.test
         ]
         return funcs
 
-    def handle_group_msg(self, msg)-> tuple:
+    def handle_group_msg(self, msg) -> tuple:
         """
         处理群组回复消息
         :param msg:
@@ -453,7 +475,7 @@ class Replier(object):
         """
         self.log.debug('receive: %s' % msg.text)
 
-        for func in self.not_at_list:
+        for func in self.at_or_not_at_list:
             typ, content1, content2 = func(msg)
             if typ:
                 self.log.debug(content1)
@@ -465,8 +487,16 @@ class Replier(object):
                 if typ:
                     self.log.debug(content1)
                     return typ, content1, content2
-            tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝").replace("清华大学硕士杨超？", "杨超越最美不允许反驳").replace("你接错了", "我不会接")
+            tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝").replace("清华大学硕士杨超？",
+                                                                                        "杨超越最美不允许反驳").replace("你接错了",
+                                                                                                              "我不会接")
             self.log.debug(tuling_reply)
             return 'text', tuling_reply, ''
+        else:
+            for func in self.only_not_at_list:
+                typ, content1, content2 = func(msg)
+                if typ:
+                    self.log.debug(content1)
+                    return typ, content1, content2
 
         return empty_result
