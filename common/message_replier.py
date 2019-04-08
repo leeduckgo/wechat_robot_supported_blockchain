@@ -438,7 +438,7 @@ class Replier(object):
         return funcs
 
     @property
-    def is_at_list(self) -> list:
+    def only_at_list(self) -> list:
         """
         被@时触发的功能,优先级小于not_at_list
         根据优先级排列顺序
@@ -482,7 +482,7 @@ class Replier(object):
                 return typ, content1, content2
 
         if msg.is_at:  # 如果@到机器人，才进行的回应
-            for func in self.is_at_list:
+            for func in self.only_at_list:
                 typ, content1, content2 = func(msg)
                 if typ:
                     self.log.debug(content1)
