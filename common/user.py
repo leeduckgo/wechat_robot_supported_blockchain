@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 from common.communication import Requester
-
+from secret import api_key
 
 class User(object):
     def __init__(self):
         self.requester = Requester("http://ahasmarter.com/api/v1/ycy/")
 
-    def get_balance_by_puid(self, puid):
+    def get_balance_by_puid(self, puid, msg=None):
         user = self.requester.get("users/" + puid)
+        if user.get('result') == 'no_exist':
+            self.update_users(msg)
+            user["balance"] = 0
         return user["balance"]
 
-    def get_level_by_puid(self, puid):
+    def get_level_by_puid(self, puid, msg=None):
         user = self.requester.get("users/" + puid)
+        if user.get('result') == 'no_exist':
+            self.update_users(msg)
+            user["level"] = 1
         return user["level"]
 
     def find_user_by_name(self, group, name):
@@ -27,7 +33,9 @@ class User(object):
         }
         return self.requester.post("users/transfer?api=" + api_key, payload)
 
-    def update_users(self, group, api_key):
+    def update_users(self, group, msg=None):
+        if msg:
+            group = msg.sender
         members = group.members
         users = []
         for member in members:

@@ -31,7 +31,7 @@ def extend_finger_guessing(func):
                 return typ, content1, content2
             user_puid = msg.member.puid
             bot_id = self.bot.self.puid
-            user_balance = self.user.get_balance_by_puid(user_puid)
+            user_balance = self.user.get_balance_by_puid(user_puid, msg)
             bot_balance = self.user.get_balance_by_puid(bot_id)
             if user_balance < 3:
                 payload = " 由于你余额不足 3 积分，所以本次游戏没有奖惩哦~"
@@ -140,7 +140,7 @@ class Replier(object):
             if real_msg[len(real_msg) - 1] == "初始化":
                 self.log.debug(msg.sender)
                 # self.group.update_group(msg.sender, self.api_key)
-                self.user.update_users(msg.sender, self.api_key)
+                self.update_user_info(msg)
                 self.log.debug("初始化完成！")
                 return 'text', "初始化完成！", ''
             elif real_msg[1] == "口令红包":
@@ -165,7 +165,7 @@ class Replier(object):
 
     def update_user_info(self, msg):
         self.log.debug("更新用户信息中……")
-        self.user.update_users(msg.sender, self.api_key)
+        self.user.update_users(msg)
         self.log.debug("用户信息更新完毕……")
 
     def chaoyue_ana(self, msg)-> tuple:
@@ -361,12 +361,12 @@ class Replier(object):
             user_puid = msg.member.puid
             self.log.debug("想拿余额的puid:")
             self.log.debug(user_puid)
-            balance = self.user.get_balance_by_puid(user_puid)
+            balance = self.user.get_balance_by_puid(user_puid, msg)
             msg = "你有" + str(balance) + "超越积分"
             return 'text', msg, ''
         if real_msg[len(real_msg) - 1] == "等级":
             user_puid = msg.member.puid
-            level = self.user.get_level_by_puid(user_puid)
+            level = self.user.get_level_by_puid(user_puid, msg)
             msg = "你现在是" + str(level) + "级: " + self.level_map[int(level)]
             return 'text', msg, ''
         return empty_result
@@ -414,7 +414,7 @@ class Replier(object):
     @property
     def is_at_list(self)-> list:
         """
-        被@时触发的功能
+        被@时触发的功能,优先级小于not_at_list
         根据优先级排列顺序
         :return:
         """
