@@ -411,6 +411,7 @@ class Replier(object):
         friend.send('参与内测看我朋友圈的图片,扫二维码加群')
         # friend.send_image('group.jpeg')
 
+    @property
     def is_at_list(self)-> list:
         """
         被@时触发的功能
@@ -428,6 +429,7 @@ class Replier(object):
         ]
         return funcs
 
+    @property
     def not_at_list(self)-> list:
         """
         未被@时触发的功能
@@ -451,14 +453,14 @@ class Replier(object):
         """
         self.log.debug('receive: %s' % msg.text)
 
-        for func in self.not_at_list():
+        for func in self.not_at_list:
             typ, content1, content2 = func(msg)
             if typ:
                 self.log.debug(content1)
                 return typ, content1, content2
 
         if msg.is_at:  # 如果@到机器人，才进行的回应
-            for func in self.is_at_list():
+            for func in self.is_at_list:
                 typ, content1, content2 = func(msg)
                 if typ:
                     self.log.debug(content1)
