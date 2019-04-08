@@ -11,6 +11,9 @@ from common.rock_scissors_paper import RspGame
 from common.user import User
 from common.ycy_replier import YcyReplier
 from common.draw_lots import DrawLots
+from common.const import q_a_list
+from common.const import jokes
+from common.const import level_map
 # from utils.utils import two_minutes_later
 # from utils.utils import now_to_datetime4
 
@@ -64,26 +67,6 @@ def extend_finger_guessing(func):
 
 class Replier(object):
     """消息回复"""
-
-    level_map = {
-        1: "隔壁村的幼稚鬼",
-        2: "村子里的弟中弟",
-        3: "村民中的初学者",
-        4: "村子里的高中生",
-        5: "合格的成年村民",
-    }
-
-    q_a_list = {
-        "生日": ["杨超越的生日是什么时候 a)7月31 b)7月29 c)7月28", "a"],
-        "演艺": ["杨超越获得了哪年的演艺人物奖？a)2017 b)2018 c)2019", "b"],
-        "主食": ["杨超越最新欢的主食是？a)土豆 b)米饭 c)燕麦片", "b"]
-    }
-
-    jokes = [
-        '''美国外交代表团到苏联访问，苏修接待官员陪他们参观“建设的伟大成就”，并且得意的说：“到了下一个五年计划，每个苏联家庭都可以拥有一架私人飞机！”\n美国人惊讶的问：“ 他们要飞机干什么呢？”\n苏修官员说：“当然有用啊……譬如你在莫斯科听说列宁格勒开始供应面包了，你可以马上开飞机赶去排队啊。''',
-        '''斯大林、赫鲁晓夫和勃列日涅夫乘坐火车出门。开着开着，火车突然停了。\n斯大林把头伸出车窗外，怒吼道：“枪毙火车司机！”可是车还是没有动。\n接着赫鲁晓夫说：“给火车司机恢复名誉！”车仍然没有动。\n勃列日涅夫说：“同志们，不如拉上窗帘，坐在座位上自己摇动身体，做出列车还在前进的样子……”''',
-        '''美术馆里有一幅描写亚当和夏娃的画。\n一个英国人看了，说：“他们一定是英国人，男士有好吃的东西就和女士分享。\n一个法国人看了，说：“他们一定是法国人，情侣裸体散步。\n一个苏联人看了，说：“他们一定是苏联人，他们没有衣服，吃得很少，却还以为自己在天堂！'''
-    ]
 
     def __init__(self, bot):
         # self.group = group
@@ -153,8 +136,8 @@ class Replier(object):
                     self.red_bag_num = int(real_msg[2])
                 except:
                     self.red_bag_num = 0
-                if real_msg[3] in self.q_a_list:
-                    item = self.q_a_list[real_msg[3]]
+                if real_msg[3] in q_a_list:
+                    item = q_a_list[real_msg[3]]
                     self.answer = item[1]
                     return 'text', item[0], ''
                 else:
@@ -377,7 +360,7 @@ class Replier(object):
         if real_msg[len(real_msg) - 1] == "等级":
             user_puid = msg.member.puid
             level = self.user.get_level_by_puid(user_puid, msg)
-            msg = "你现在是" + str(level) + "级: " + self.level_map[int(level)]
+            msg = "你现在是" + str(level) + "级: " + level_map[int(level)]
             return 'text', msg, ''
         return empty_result
 
@@ -405,7 +388,7 @@ class Replier(object):
             payload = "https://ke.qq.com/course/392391?tuin=ce503a40 ⬅ 欢迎猛戳链接投票"
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1].find("笑话") != -1:
-            payload = choice(self.jokes)
+            payload = choice(jokes)
             return 'text', payload, ''
         return empty_result
 
