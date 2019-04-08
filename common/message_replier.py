@@ -2,7 +2,7 @@
 import os
 import re
 from random import choice
-
+from functools import wraps
 from wxpy import Tuling
 from common.communication import create_messages
 from common.group import Group
@@ -11,15 +11,55 @@ from common.rock_scissors_paper import RspGame
 from common.user import User
 from common.ycy_replier import YcyReplier
 from common.draw_lots import DrawLots
-from utils.utils import two_minutes_later
-from utils.utils import now_to_datetime4
+# from utils.utils import two_minutes_later
+# from utils.utils import now_to_datetime4
 
-from secret import api_key,TULING_KEY
+from secret import api_key
+from secret import TULING_KEY
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
 empty_result = ('', '', '')
 
+
+def extend_finger_guessing(func):
+    @wraps(func)
+    def inner(self, msg):
+        typ, content1, content2 = func(self, msg)
+        if typ:
+            if typ == 'text':
+                return typ, content1, content2
+            user_puid = msg.member.puid
+            bot_id = self.bot.self.puid
+            user_balance = self.user.get_balance_by_puid(user_puid)
+            bot_balance = self.user.get_balance_by_puid(bot_id)
+            if user_balance < 3:
+                payload = " 由于你余额不足 3 积分，所以本次游戏没有奖惩哦~"
+            elif bot_balance < 3:
+                payload = " 超越宝宝的钱包瘪了，所以本次游戏没有奖惩哦~"
+            else:
+                if "游戏结束，恭喜你赢了" in content2:
+                    from_puid = bot_id
+                    to_puid = user_puid
+                    result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
+                    if result["status"] == "success":
+                        payload = " 奖励给 " + msg.member.name + " 3 个超越积分！"
+                    else:
+                        payload = " 但是我没钱啦~"
+                elif "你输了" in content2:
+                    from_puid = user_puid
+                    to_puid = bot_id
+                    result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
+                    if result["status"] == "success":
+                        payload = " 扣除 " + msg.member.name + " 3 个超越积分！"
+                    else:
+                        payload = " 你钱不够，接下来的游戏会没有奖励哦~"
+                else:
+                    payload = ""
+            return typ, content1, content2 + payload
+        return empty_result
+
+    return inner
 
 class Replier(object):
     """消息回复"""
@@ -59,11 +99,10 @@ class Replier(object):
         self.user_lots_read_map = {}
         self.answer = ""
         self.red_bag_num = 0
-        '''
-        开启每日定时器，每日零时清空抽签内容
-        '''
+
+        # 开启每日定时器，每日零时清空抽签内容
         self.scheduler = BackgroundScheduler()
-        self.scheduler.add_job(self.init_lots_map, 'cron',  hour = '0')
+        self.scheduler.add_job(self.init_lots_map, 'cron',  hour='0')
         self.scheduler.start()
 
     def init_lots_map(self):
@@ -72,21 +111,20 @@ class Replier(object):
         """
         self.user_lots_map = {}
         self.user_lots_read_map = {}
-        self.log.info("=== Init Lots ===")
-
+        self.log.debug("=== Init Lots ===")
 
     def random_img(self, msg)-> tuple:
         """
         随机获取图片
         :return:
         """
-        print("===天降超越===")
-        print(msg.text)
+        self.log.debug("===天降超越===")
+        self.log.debug(msg.text)
 
         if "天降超越" in msg.text or "天将超越" in msg.text:# todo 待增加
             list_dir = os.listdir(os.path.join('resources', 'pics'))
             path = choice(list_dir)
-            self.log.info('choose:-->{}'.format(path))
+            self.log.debug('choose:-->{}'.format(path))
             self.log.debug(os.path.join('resources', 'pics', path))
             return 'img', os.path.join('resources', 'pics', path), ''
         return empty_result
@@ -100,16 +138,16 @@ class Replier(object):
         real_msg = msg.text.split()
         if msg.member.puid == self.group.admin_puid and len(real_msg) != 1:  # 如果是管理员
             if real_msg[len(real_msg) - 1] == "初始化":
-                self.log.info(msg.sender)
+                self.log.debug(msg.sender)
                 # self.group.update_group(msg.sender, self.api_key)
                 self.user.update_users(msg.sender, self.api_key)
-                self.log.info("初始化完成！")
+                self.log.debug("初始化完成！")
                 return 'text', "初始化完成！", ''
             elif real_msg[1] == "口令红包":
-                self.log.info("设置口令红包！")
-                print("===口令红包信息===")
-                print(real_msg[2])
-                print(real_msg[3])
+                self.log.debug("设置口令红包！")
+                self.log.debug("===口令红包信息===")
+                self.log.debug(real_msg[2])
+                self.log.debug(real_msg[3])
                 try:
                     self.red_bag_num = int(real_msg[2])
                 except:
@@ -126,9 +164,9 @@ class Replier(object):
         return empty_result
 
     def update_user_info(self, msg):
-        self.log.info("更新用户信息中……")
+        self.log.debug("更新用户信息中……")
         self.user.update_users(msg.sender, self.api_key)
-        self.log.info("用户信息更新完毕……")
+        self.log.debug("用户信息更新完毕……")
 
     def chaoyue_ana(self, msg)-> tuple:
         """
@@ -155,7 +193,7 @@ class Replier(object):
         is_leave_message = re.search(r'(留言:|留言：)(.*)', msg.text)
         if is_leave_message:
             content = is_leave_message.group(2).strip()  # 获取第二组内容并去除前后空格
-            self.log.info('留言内容:{}'.format(content))
+            self.log.debug('留言内容:{}'.format(content))
             status = create_messages(
                 name=msg.member.name,
                 content=content,
@@ -180,40 +218,19 @@ class Replier(object):
             return 'text', self.group.intro, ''
         return empty_result
 
+
+
+    @extend_finger_guessing
     def finger_guessing_game(self, msg)-> tuple:
         """
         猜拳游戏
         :param msg:
         :return:
         """
-        group_id = msg.member.group.puid  # 群组唯一id
-        name = msg.member.name  # 玩家名
-        user_id = msg.member.puid  # 玩家id
-        real_msg = msg.text.split()
-        if real_msg[len(real_msg) - 1] == "石头剪刀布" or real_msg[len(real_msg) - 1] == "剪刀石头布" \
-                or real_msg[len(real_msg) - 1] == "猜拳":
-            self.log.debug('---init猜拳----')
-            # { 群组id : {玩家id: [游戏对象 , 开始游戏的时间, 玩家名]}}
-            self.rsp_game_player_map.update(
-                {
-                    group_id: [user_id, RspGame(1), now_to_datetime4(), name],
-                },
-            )
-            self.rsp_game_player_map[group_id][1].start(name)  # 开始游戏
-            return 'text', '@' + msg.member.name + \
-                   " 石头剪刀布开始，你先出吧，赢了我有奖励哦(1局定胜)", ''
-        return empty_result
-
-    def play_game(self, msg)-> tuple:
-        """
-        游戏
-        :param msg:
-        :return:
-        """
         if "超越猜拳" in msg.text:
             return "text", "@我并回复你的出招(比如「剪刀」)就能跟我玩猜拳游戏，赢了我会奖励3积分，输了扣除3积分，如果积分不够则不会进行奖惩", ""
         real_msg = msg.text.split()
-        if "石头" in real_msg[len(real_msg) - 1]  or  "剪刀" in real_msg[len(real_msg) - 1]  \
+        if "石头" in real_msg[len(real_msg) - 1] or "剪刀" in real_msg[len(real_msg) - 1]  \
                 or "布" in real_msg[len(real_msg) - 1]:
             game = RspGame(1)
             game.start(msg.member.name)
@@ -221,50 +238,68 @@ class Replier(object):
             return 'both', pic, result
         else:
             return empty_result
-        """
-        group_id = msg.member.group.puid
-        user_id = msg.member.puid
-        player_map = self.rsp_game_player_map
-        self.log.info(player_map)
-        # 如果字典中包含群组id并且 玩家id在字典中
-        if player_map.get(group_id):
-            is_overtime = now_to_datetime4() > two_minutes_later(player_map[group_id][2])
-            self.log.info('游戏是否超时:%s' % is_overtime)
-            if is_overtime:
-                msg = '@' + str(player_map[group_id][3]) + ' 游戏已经超时自动终止了呀!'
-                msg.chat.send_msg(msg)
-                player_map.pop(group_id)  # 超时删除群组id对应的字典
-        if player_map.get(group_id):  # 超时可能会pop掉该key,需要重新判断
-            if user_id not in player_map.get(group_id, []):  # 不是玩家的消息，不进行回应
-                return 'text', '@' + msg.member.name + " 先等等哦，我正在跟@" + \
-                       player_map[group_id][3] + " 玩石头剪刀布", ''
-            else:
-                cancel, result, pic = player_map[group_id][1].play(msg)  # 玩游戏
-                self.log.debug('game result:{} pic:{}'.format(result, pic))
-                if cancel == 1:
-                    player_map.pop(group_id)  # 如果游戏结束, 删除群组id对应的字典
-                return 'both', pic, result
-        typ, content1, content2 = self.finger_guessing_game(msg)  # 猜拳游戏
-        if typ == 'text':
-            return typ, content1, content2
-        return empty_result"""
+
+    # def play_game(self, msg)-> tuple:
+    #     """
+    #     游戏
+    #     :param msg:
+    #     :return:
+    #     """
+    #     if "超越猜拳" in msg.text:
+    #         return "text", "@我并回复你的出招(比如「剪刀」)就能跟我玩猜拳游戏，赢了我会奖励3积分，输了扣除3积分，如果积分不够则不会进行奖惩", ""
+    #     real_msg = msg.text.split()
+    #     if "石头" in real_msg[len(real_msg) - 1] or "剪刀" in real_msg[len(real_msg) - 1]  \
+    #             or "布" in real_msg[len(real_msg) - 1]:
+    #         game = RspGame(1)
+    #         game.start(msg.member.name)
+    #         cancel, result, pic = game.play(msg)
+    #         return 'both', pic, result
+    #     else:
+    #         return empty_result
+    #     """
+    #     group_id = msg.member.group.puid
+    #     user_id = msg.member.puid
+    #     player_map = self.rsp_game_player_map
+    #     self.log.debug(player_map)
+    #     # 如果字典中包含群组id并且 玩家id在字典中
+    #     if player_map.get(group_id):
+    #         is_overtime = now_to_datetime4() > two_minutes_later(player_map[group_id][2])
+    #         self.log.debug('游戏是否超时:%s' % is_overtime)
+    #         if is_overtime:
+    #             msg = '@' + str(player_map[group_id][3]) + ' 游戏已经超时自动终止了呀!'
+    #             msg.chat.send_msg(msg)
+    #             player_map.pop(group_id)  # 超时删除群组id对应的字典
+    #     if player_map.get(group_id):  # 超时可能会pop掉该key,需要重新判断
+    #         if user_id not in player_map.get(group_id, []):  # 不是玩家的消息，不进行回应
+    #             return 'text', '@' + msg.member.name + " 先等等哦，我正在跟@" + \
+    #                    player_map[group_id][3] + " 玩石头剪刀布", ''
+    #         else:
+    #             cancel, result, pic = player_map[group_id][1].play(msg)  # 玩游戏
+    #             self.log.debug('game result:{} pic:{}'.format(result, pic))
+    #             if cancel == 1:
+    #                 player_map.pop(group_id)  # 如果游戏结束, 删除群组id对应的字典
+    #             return 'both', pic, result
+    #     typ, content1, content2 = self.finger_guessing_game(msg)  # 猜拳游戏
+    #     if typ == 'text':
+    #         return typ, content1, content2
+    #     return empty_result"""
 
     def red_bag(self, msg)-> tuple:
         if "口令红包" in msg.text:
             return "text", "管理员会在某些时间在群里发出超越百科抢答红包，回答正确会得到超越积分，多多留意~", "" 
         real_msg = msg.text.split()
-        if self.red_bag_num == 0: #如果红包剩余数量为 0
-            self.answer = "" # answer清零
+        if self.red_bag_num == 0:  # 如果红包剩余数量为0
+            self.answer = ""  # answer清零
         else:
             if self.answer == real_msg[len(real_msg) - 1] and msg.is_at:
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
                 result = self.user.transfer(bot_id, user_puid, 1, self.api_key)
-                self.red_bag_num -=1
+                self.red_bag_num -= 1
                 if result["status"] == "success":
-                    return 'text'," 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
+                    return 'text', " 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
                 else:
-                    return 'text','红包领完啦！',''
+                    return 'text', '红包领完啦！',''
         return empty_result
 
     def draw_lots(self, msg)-> tuple:
@@ -288,7 +323,6 @@ class Replier(object):
         else:
             return empty_result
 
-            
     def reward(self, msg)-> tuple:
         """
         打赏
@@ -299,8 +333,8 @@ class Replier(object):
             str_after_dashang = msg.text[str.find(msg.text, "打赏") + 3:].split()
             to = self.user.find_user_by_name(msg.sender, str_after_dashang[0])
             from_puid = msg.member.puid
-            self.log.info(from_puid)
-            self.log.info(to.puid)
+            self.log.debug(from_puid)
+            self.log.debug(to.puid)
             result = self.user.transfer(
                 from_puid, to.puid, int(
                     str_after_dashang[1],
@@ -325,8 +359,8 @@ class Replier(object):
             return 'text', msg, ''
         if real_msg[len(real_msg) - 1] in ["余额", "积分"]:
             user_puid = msg.member.puid
-            print("想拿余额的puid:")
-            print(user_puid)
+            self.log.debug("想拿余额的puid:")
+            self.log.debug(user_puid)
             balance = self.user.get_balance_by_puid(user_puid)
             msg = "你有" + str(balance) + "超越积分"
             return 'text', msg, ''
@@ -344,9 +378,9 @@ class Replier(object):
         :return:
         """
         real_msg = msg.text.split()
-        if real_msg[len(real_msg) - 1] in ["致谢","鸣谢"]:
+        if real_msg[len(real_msg) - 1] in ["致谢", "鸣谢"]:
             return 'text', "感谢「心理医生聪」与「禹sen」，提供超越语录的支持！", ''
-        if real_msg[len(real_msg) - 1] in ["帮助","?","？"]:
+        if real_msg[len(real_msg) - 1] in ["帮助", "?", "？"]:
             payload = "本 AI 目前支持以下功能: \n" + \
                         "- 超越积分\n" + \
                         "- 天降超越\n" + \
@@ -377,93 +411,61 @@ class Replier(object):
         friend.send('参与内测看我朋友圈的图片,扫二维码加群')
         # friend.send_image('group.jpeg')
 
+    def is_at_list(self)-> list:
+        """
+        被@时触发的功能
+        根据优先级排列顺序
+        :return:
+        """
+        funcs = [
+            # self.robot_init,  # 紧急情况下的初始化以及口令红包的初始化,不被@时也应该触发
+            self.finger_guessing_game,  # 猜拳游戏
+            # self.random_img,  # 被@时也能触发天降超越
+            # self.draw_lots,  # 超越抽签
+            # self.handle_leave_message,  # 处理留言
+            # self.get_group_introduction,  # 群组简介
+            # self.integral,  # 超越积分
+            # self.extra,  # 额外信息
+        ]
+        return funcs
+
+    def not_at_list(self)-> list:
+        """
+        未被@时触发的功能
+        根据优先级排列顺序
+        :return:
+        """
+        funcs = [
+            # self.robot_init,  #紧急情况下的初始化 以及口令红包的初始化
+            # self.reward,  # 打赏可能被@ 也可能不被@
+            # self.red_bag,   # 口令红包
+            # self.random_img,  # 天降超越
+            # self.chaoyue_ana,  # 超越语录
+        ]
+        return funcs
+
     def handle_group_msg(self, msg)-> tuple:
         """
         处理群组回复消息
         :param msg:
         :return:
         """
-        self.log.info('receive: %s' % msg.text)
+        self.log.debug('receive: %s' % msg.text)
 
-        typ, content1, content2 = self.reward(msg)  # 打赏可能被@ 也可能不被@
-        if typ:
-            self.log.info(content1)
-            return typ, content1, content2
-        
-        typ, content1, content2 = self.robot_init(msg)  # 紧急情况下的初始化 以及口令红包的初始化
-        if typ:
-            self.log.info(content1)
-            return typ, content1, content2
-        typ, content1, content2 = self.red_bag(msg)  # 口令红包
-        if typ:
-            self.log.info(content1)
-            return typ, content1, content2
-        
-        typ, content1, content2 = self.random_img(msg)  # 天降超越
-        if typ:
-            self.log.info(content1)
-            return typ, content1, content2
-        
-        typ, content1, content2 = self.chaoyue_ana(msg)  # 超越语录
-        if typ:
-            self.log.info(content1)
-            return typ, content1, content2
+        for func in self.not_at_list():
+            typ, content1, content2 = func(msg)
+            if typ:
+                self.log.debug(content1)
+                return typ, content1, content2
 
         if msg.is_at:  # 如果@到机器人，才进行的回应
-            typ, content1, content2 = self.play_game(msg)  # 玩游戏,高优先级,内部存在拦截其他回复
-            if typ:
-                self.log.info(content1)
-                user_puid = msg.member.puid
-                bot_id = self.bot.self.puid
-                user_balance = self.user.get_balance_by_puid(user_puid)
-                bot_balance = self.user.get_balance_by_puid(bot_id)
-                if user_balance < 3:
-                    payload = " 由于你余额不足 3 积分，所以本次游戏没有奖惩哦~"
-                elif bot_balance < 3:
-                    payload = " 超越宝宝的钱包瘪了，所以本次游戏没有奖惩哦~"
-                else:
-                    if "游戏结束，恭喜你赢了" in content2:
-                        from_puid = bot_id
-                        print(from_puid)
-                        to_puid = user_puid
-                        result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
-                        if result["status"] == "success":
-                            payload = " 奖励给 " + msg.member.name + " 3 个超越积分！"
-                        else:
-                            payload = " 但是我没钱啦~"
-                    elif "你输了" in content2:
-                        from_puid = user_puid
-                        to_puid = bot_id
-                        result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
-                        if result["status"] == "success":
-                            payload = " 扣除 " + msg.member.name + " 3 个超越积分！"
-                        else:
-                            payload = " 你钱不够，接下来的游戏会没有奖励哦~"
-                    else:
-                        payload = ""
-                return typ, content1, content2 + payload
-            typ, content1, content2 = self.draw_lots(msg)  # 抽签
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
-            typ, content1, content2 = self.handle_leave_message(msg)  # 处理留言请求
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
-            typ, content1, content2 = self.get_group_introduction(msg)  # 群简介
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
-            typ, content1, content2 = self.integral(msg)  # 积分相关
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
-            typ, content1, content2 = self.extra(msg)  # 额外信息
-            if typ:
-                self.log.info(content1)
-                return typ, content1, content2
+            for func in self.is_at_list():
+                typ, content1, content2 = func(msg)
+                if typ:
+                    self.log.debug(content1)
+                    return typ, content1, content2
             tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝").replace("清华大学硕士杨超？", "杨超越最美不允许反驳").replace("你接错了", "我不会接")
-            self.log.info(tuling_reply)
+            self.log.debug(tuling_reply)
             return 'text', tuling_reply, ''
 
         return empty_result
