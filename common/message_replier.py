@@ -154,7 +154,7 @@ class Replier(object):
 
     def update_user_info(self, msg):
         self.log.debug("更新用户信息中……")
-        self.user.update_users(msg)
+        self.user.update_users(msg=msg)
         self.log.debug("用户信息更新完毕……")
 
     def chaoyue_ana(self, msg) -> tuple:

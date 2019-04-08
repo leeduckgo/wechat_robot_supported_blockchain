@@ -6,14 +6,14 @@ class User(object):
     def __init__(self):
         self.requester = Requester("http://ahasmarter.com/api/v1/ycy/")
 
-    def get_balance_by_puid(self, puid, msg=None):
+    def get_balance_by_puid(self, puid=None, msg=None):
         user = self.requester.get("users/" + puid)
         if user.get('result') == 'no_exist':
             self.update_users(msg)
             user["balance"] = 0
         return user["balance"]
 
-    def get_level_by_puid(self, puid, msg=None):
+    def get_level_by_puid(self, puid=None, msg=None):
         user = self.requester.get("users/" + puid)
         if user.get('result') == 'no_exist':
             self.update_users(msg)
@@ -33,7 +33,7 @@ class User(object):
         }
         return self.requester.post("users/transfer?api=" + api_key, payload)
 
-    def update_users(self, group, msg=None):
+    def update_users(self, group=None, msg=None):
         if msg:
             group = msg.sender
         members = group.members
