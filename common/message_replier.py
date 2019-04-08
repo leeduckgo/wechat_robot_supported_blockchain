@@ -424,7 +424,7 @@ class Replier(object):
     @property
     def at_or_not_at_list(self) -> list:
         """
-        无论是否被@都会执行
+        无论是否被@都会执行,最高优先级
         根据优先级排列顺序
         :return:
         """
@@ -440,7 +440,7 @@ class Replier(object):
     @property
     def only_at_list(self) -> list:
         """
-        被@时触发的功能,优先级小于not_at_list
+        被@时触发的功能,at_or_not_at_list
         根据优先级排列顺序
         :return:
         """
@@ -458,7 +458,7 @@ class Replier(object):
     @property
     def only_not_at_list(self) -> list:
         """
-        仅未被@时触发的功能优先级等于is_at_list
+        仅未被@时触发的功能优先级等于only_at_list
         根据优先级排列顺序
         :return:
         """
@@ -492,7 +492,7 @@ class Replier(object):
                                                                                                               "我不会接")
             self.log.debug(tuling_reply)
             return 'text', tuling_reply, ''
-        else:
+        else:  # 预留仅未被@时执行,暂无此情况
             for func in self.only_not_at_list:
                 typ, content1, content2 = func(msg)
                 if typ:
