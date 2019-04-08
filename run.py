@@ -11,8 +11,8 @@ from common.message_replier import Replier
 # === init ===
 # user.name 用户群内备注名称
 # user.nick_name 用户微信名称
-bot = Bot(console_qr=True)  # 控制台二维码
-#bot = Bot(cache_path=True)  # 短时间内重启无需重新登录
+bot = Bot(console_qr=True, cache_path=True)  # 控制台二维码
+# bot = Bot(cache_path=True)  # 短时间内重启无需重新登录
 bot.enable_puid()
 logger = Logger()  # 项目logger对象
 replier = Replier(bot)

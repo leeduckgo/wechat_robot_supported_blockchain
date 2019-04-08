@@ -418,14 +418,13 @@ class Replier(object):
         :return:
         """
         funcs = [
-            # self.robot_init,  # 紧急情况下的初始化以及口令红包的初始化,不被@时也应该触发
             self.finger_guessing_game,  # 猜拳游戏
-            # self.random_img,  # 被@时也能触发天降超越
-            # self.draw_lots,  # 超越抽签
-            # self.handle_leave_message,  # 处理留言
-            # self.get_group_introduction,  # 群组简介
-            # self.integral,  # 超越积分
-            # self.extra,  # 额外信息
+            self.random_img,  # 被@时也能触发天降超越
+            self.draw_lots,  # 超越抽签
+            self.handle_leave_message,  # 处理留言
+            self.get_group_introduction,  # 群组简介
+            self.integral,  # 超越积分
+            self.extra,  # 额外信息
         ]
         return funcs
 
@@ -436,11 +435,11 @@ class Replier(object):
         :return:
         """
         funcs = [
-            # self.robot_init,  #紧急情况下的初始化 以及口令红包的初始化
-            # self.reward,  # 打赏可能被@ 也可能不被@
-            # self.red_bag,   # 口令红包
-            # self.random_img,  # 天降超越
-            # self.chaoyue_ana,  # 超越语录
+            self.robot_init,  #紧急情况下的初始化 以及口令红包的初始化
+            self.reward,  # 打赏可能被@ 也可能不被@
+            self.red_bag,   # 口令红包
+            self.random_img,  # 天降超越
+            self.chaoyue_ana,  # 超越语录
         ]
         return funcs
 
