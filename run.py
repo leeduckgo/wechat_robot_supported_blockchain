@@ -16,10 +16,14 @@ bot = Bot(console_qr=True, cache_path=True)  # 控制台二维码
 bot.enable_puid()
 logger = Logger()  # 项目logger对象
 replier = Replier(bot)
-
+groups = bot.groups()
 
 # === main process ===
 if __name__ == '__main__':
+
+    for group in groups:  # 所有群聊puid
+        logger.warning('群名:%s,puid:%s' % (group.name, group.puid))
+
     @bot.register()
     def reply_message(msg):
         logger.info(msg.sender)
@@ -27,7 +31,7 @@ if __name__ == '__main__':
         if type(msg.sender) == Group:  # 所有群组消息
             if msg.sender.puid in ["1f423133", "4193b4db"]:  # 限定群组
                 logger.info("=== start ===")
-                replier.set_group(msg.sender.puid) # 获取群信息
+                replier.set_group(msg.sender.puid)  # 获取群信息
                 logger.info(msg.member.puid)
                 if msg.type == "Note":
                     replier.update_user_info(msg)

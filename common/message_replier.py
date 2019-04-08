@@ -26,6 +26,11 @@ empty_result = ('', '', '')
 
 
 def extend_finger_guessing(func):
+    """
+    扩展猜拳游戏
+    :param func:
+    :return:
+    """
     @wraps(func)
     def inner(self, msg):
         typ, content1, content2 = func(self, msg)
@@ -163,8 +168,8 @@ class Replier(object):
             return 'text', '@' + msg.member.name + ' ' + respond_msg, ''
         return empty_result
 
-    # def set_group(self, puid):
-    #     self.group.set_group(puid)
+    def set_group(self, puid):
+        self.group.set_group(puid)
 
     def handle_leave_message(self, msg) -> tuple:
         """
@@ -423,7 +428,7 @@ class Replier(object):
     @property
     def only_at_list(self) -> list:
         """
-        被@时触发的功能,at_or_not_at_list
+        被@时触发的功能,优先级小于at_or_not_at_list
         根据优先级排列顺序
         :return:
         """
@@ -470,9 +475,9 @@ class Replier(object):
                 if typ:
                     self.log.debug(content1)
                     return typ, content1, content2
-            tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝").replace("清华大学硕士杨超？",
-                                                                                        "杨超越最美不允许反驳").replace("你接错了",
-                                                                                                              "我不会接")
+            tuling_reply = self.tuling.reply_text(msg).replace("图灵机器人", "超越宝宝").replace(
+                "清华大学硕士杨超？", "杨超越最美不允许反驳"
+            ).replace("你接错了", "我不会接")
             self.log.debug(tuling_reply)
             return 'text', tuling_reply, ''
         else:  # 预留仅未被@时执行,暂无此情况
