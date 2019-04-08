@@ -6,12 +6,12 @@ class User(object):
     def __init__(self):
         self.requester = Requester("http://ahasmarter.com/api/v1/ycy/")
 
-    def get_balance_by_puid(self, puid):
-        user = self.requester.get("users/" + puid)
+    def get_balance_by_puid(self, puid, group_puid):
+        user = self.requester.get("users/" + puid +"?group_id=" + group_puid)
         return user["balance"]
 
-    def get_level_by_puid(self, puid):
-        user = self.requester.get("users/" + puid)
+    def get_level_by_puid(self, puid, group_puid):
+        user = self.requester.get("users/" + puid + "?group_id=" + group_puid)
         return user["level"]
 
     def find_user_by_name(self, group, name):

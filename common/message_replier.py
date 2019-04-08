@@ -41,7 +41,9 @@ class Replier(object):
     jokes = [
         '''美国外交代表团到苏联访问，苏修接待官员陪他们参观“建设的伟大成就”，并且得意的说：“到了下一个五年计划，每个苏联家庭都可以拥有一架私人飞机！”\n美国人惊讶的问：“ 他们要飞机干什么呢？”\n苏修官员说：“当然有用啊……譬如你在莫斯科听说列宁格勒开始供应面包了，你可以马上开飞机赶去排队啊。''',
         '''斯大林、赫鲁晓夫和勃列日涅夫乘坐火车出门。开着开着，火车突然停了。\n斯大林把头伸出车窗外，怒吼道：“枪毙火车司机！”可是车还是没有动。\n接着赫鲁晓夫说：“给火车司机恢复名誉！”车仍然没有动。\n勃列日涅夫说：“同志们，不如拉上窗帘，坐在座位上自己摇动身体，做出列车还在前进的样子……”''',
-        '''美术馆里有一幅描写亚当和夏娃的画。\n一个英国人看了，说：“他们一定是英国人，男士有好吃的东西就和女士分享。\n一个法国人看了，说：“他们一定是法国人，情侣裸体散步。\n一个苏联人看了，说：“他们一定是苏联人，他们没有衣服，吃得很少，却还以为自己在天堂！'''
+        '''美术馆里有一幅描写亚当和夏娃的画。\n一个英国人看了，说：“他们一定是英国人，男士有好吃的东西就和女士分享。\n一个法国人看了，说：“他们一定是法国人，情侣裸体散步。\n一个苏联人看了，说：“他们一定是苏联人，他们没有衣服，吃得很少，却还以为自己在天堂！''',
+        '''杨村制度的优越性在哪里？\n成功克服了其他制度里不存在的问题。''',
+        '''黑子：哈哈哈，杨超越这么重要的场合居然口误？\n路人：什么场合？\n黑子：不知道？\n路人：那你看了这么久的视频在看什么？\n黑子：在看杨超越！'''
     ]
 
     def __init__(self, bot):
@@ -327,7 +329,7 @@ class Replier(object):
             user_puid = msg.member.puid
             print("想拿余额的puid:")
             print(user_puid)
-            balance = self.user.get_balance_by_puid(user_puid)
+            balance = self.user.get_balance_by_puid(user_puid, msg.member.group.puid)
             msg = "你有" + str(balance) + "超越积分"
             return 'text', msg, ''
         if real_msg[len(real_msg) - 1] == "等级":
@@ -415,8 +417,8 @@ class Replier(object):
                 self.log.info(content1)
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
-                user_balance = self.user.get_balance_by_puid(user_puid)
-                bot_balance = self.user.get_balance_by_puid(bot_id)
+                user_balance = self.user.get_balance_by_puid(user_puid, msg.member.group.puid)
+                bot_balance = self.user.get_balance_by_puid(bot_id, msg.member.group.puid)
                 if user_balance < 3:
                     payload = " 由于你余额不足 3 积分，所以本次游戏没有奖惩哦~"
                 elif bot_balance < 3:
