@@ -19,11 +19,12 @@ class User(object):
             if name in member.name:
                 return member
 
-    def transfer(self, from_puid, to_puid, amount, api_key):
+    def transfer(self, from_puid, to_puid, group_puid, amount, api_key):
         payload = {
             "from": from_puid,
             "to": to_puid,
             "amount": amount,
+            "group_id": group_puid
         }
         return self.requester.post("users/transfer?api=" + api_key, payload)
 

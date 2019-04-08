@@ -9,6 +9,7 @@ from common.group import Group
 from common.logger import Logger
 from common.rock_scissors_paper import RspGame
 from common.user import User
+from common.real_estate import RealEstate
 from common.ycy_replier import YcyReplier
 from common.draw_lots import DrawLots
 from utils.utils import two_minutes_later
@@ -57,6 +58,7 @@ class Replier(object):
         self.rsp_game_player_map = {}
         self.bot = bot
         self.draw_lots_game = DrawLots()
+        self.real_estate = RealEstate()
         self.user_lots_map = {}
         self.user_lots_read_map = {}
         self.answer = ""
@@ -165,7 +167,7 @@ class Replier(object):
             )
             if status == "ok":
                 return 'text', '@' + msg.member.name + ' ' + "留言成功！点击 {} 可查看你的留言".format(
-                    'http://ycy.ahasmarter.com/',
+                    'http://ahasmarter.com/',
                 ), ''
             else:
                 return 'text', '@' + msg.member.name + ' ' + "留言失败！稍后再尝试吧", ''
@@ -261,7 +263,7 @@ class Replier(object):
             if self.answer == real_msg[len(real_msg) - 1] and msg.is_at:
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
-                result = self.user.transfer(bot_id, user_puid, 1, self.api_key)
+                result = self.user.transfer(bot_id, user_puid, self,group.puid, 1, self.api_key)
                 self.red_bag_num -=1
                 if result["status"] == "success":
                     return 'text'," 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
@@ -304,7 +306,7 @@ class Replier(object):
             self.log.info(from_puid)
             self.log.info(to.puid)
             result = self.user.transfer(
-                from_puid, to.puid, int(
+                from_puid, to.puid, self.group.puid, int(
                     str_after_dashang[1],
                 ), self.api_key,
             )
@@ -329,15 +331,67 @@ class Replier(object):
             user_puid = msg.member.puid
             print("想拿余额的puid:")
             print(user_puid)
-            balance = self.user.get_balance_by_puid(user_puid, msg.member.group.puid)
+            balance = self.user.get_balance_by_puid(user_puid, self.group.puid)
             msg = "你有" + str(balance) + "超越积分"
             return 'text', msg, ''
         if real_msg[len(real_msg) - 1] == "等级":
             user_puid = msg.member.puid
-            level = self.user.get_level_by_puid(user_puid)
+            level = self.user.get_level_by_puid(user_puid, self.group.puid)
             msg = "你现在是" + str(level) + "级: " + self.level_map[int(level)]
             return 'text', msg, ''
         return empty_result
+
+    def houses(self, msg)-> tuple:
+        """
+        房产相关
+        :return:
+        """
+        real_msg = msg.text.split()
+        try:
+            if "超越买房" in msg.text:
+                return "text", "超越买房是实验性功能，@我并回复「看房」查看目前「超越大陆」上的房产所有者\n\n"+\
+                    "@我并回复「买房 房产名 价格」可以进行房产购买，例如「@全村的希望 买房 火炉堡 30」\n"+\
+                        "注意！！！你出的价格至少要比当前的价格大 1，才能买房成功 \n" +\
+                        "如果你是房产所有者，@我并回复「房产名 签名：「你要签名的内容」」可进行签名，例如「@全村的希望 火炉堡 签名：靓仔」", "" 
+            if real_msg[len(real_msg) - 1] == "看房":
+                print("=== 看房ing ===")
+                msg = self.real_estate.look()
+                return 'text', msg, ''
+            elif re.search(r'(签名:|签名：)(.*)', msg.text):
+                print("=== 签名ing ===")
+                house_name = real_msg[1]
+                print(msg.text)
+                signature = msg.text[msg.text.find("签名")+3:]
+                print(house_name)
+                print(self.api_key)
+                print(msg.member.puid)
+                print(self.group.puid)
+                print(signature)
+                res = self.real_estate.leave_sig(msg.member.puid, self.group.puid, signature, house_name, self.api_key)
+                print(res)
+                if res["result"] == "success":
+                    payload = "你在" + house_name + "上留下了你的签名：" + signature
+                    return 'text', payload, ''
+                else:
+                    payload = "签名失败！"
+                    return 'text', payload, ''
+            elif real_msg[1] == "买房":
+                print("=== 买房ing ===")
+                house_name = real_msg[2]
+                amount = int(real_msg[3])
+                print(house_name)
+                print(amount)
+                res = self.real_estate.buy_house(msg.member.puid, self.group.puid, house_name, amount, self.api_key)
+                if res["result"] == "success":
+                    payload = "买房成功！\n你现在是 " + house_name + " 的领主！"
+                    return 'text', payload, ''
+                else:
+                    payload = "买房失败！"
+                    return 'text', payload, ''
+
+            return empty_result
+        except:
+            return empty_result
 
     def extra(self, msg)-> tuple:
         """
@@ -356,7 +410,8 @@ class Replier(object):
                         "- 村头留言板\n" + \
                         "- 超越抽签\n" + \
                         "- 超越接龙\n" + \
-                        "- 口令红包（管理员功能）"
+                        "- 口令红包（管理员功能）\n" + \
+                        "- 超越买房"
                     
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
@@ -428,7 +483,7 @@ class Replier(object):
                         from_puid = bot_id
                         print(from_puid)
                         to_puid = user_puid
-                        result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
+                        result = self.user.transfer(from_puid, to_puid,self,group.puid, 3, self.api_key)
                         if result["status"] == "success":
                             payload = " 奖励给 " + msg.member.name + " 3 个超越积分！"
                         else:
@@ -436,7 +491,7 @@ class Replier(object):
                     elif "你输了" in content2:
                         from_puid = user_puid
                         to_puid = bot_id
-                        result = self.user.transfer(from_puid, to_puid, 3, self.api_key)
+                        result = self.user.transfer(from_puid, to_puid, self,group.puid, 3, self.api_key)
                         if result["status"] == "success":
                             payload = " 扣除 " + msg.member.name + " 3 个超越积分！"
                         else:
@@ -460,6 +515,12 @@ class Replier(object):
             if typ:
                 self.log.info(content1)
                 return typ, content1, content2
+            
+            typ, content1, content2 = self.houses(msg)  # 积分相关
+            if typ:
+                self.log.info(content1)
+                return typ, content1, content2
+
             typ, content1, content2 = self.extra(msg)  # 额外信息
             if typ:
                 self.log.info(content1)
