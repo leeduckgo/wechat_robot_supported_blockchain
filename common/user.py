@@ -36,7 +36,7 @@ class User(object):
                 "name": member.name,
                 "puid": member.puid,
                 "level": 1,
-                "balance": 0,
+                "balance": 20,
             }
             users.append(user)
         payload = {"group": group.puid, "users": users}
