@@ -272,11 +272,10 @@ class Replier(object):
                 print("=====")
                 result = self.user.transfer(bot_id, user_puid, self.group.puid, 3, self.api_key)
                 self.red_bag_num -=1
-                return 'text','红包拿好!',''
-                # if result["status"] == "success":
-                #     return 'text'," 口令正确！奖励 1 个超越积分！", ''
-                # else:
-                #     return 'text','红包领完啦！',''
+                if result["status"] == "success":
+                    return 'text'," 口令正确！奖励给" + msg.member.name + " 3 个超越积分！", ''
+                else:
+                    return 'text','红包领完啦！',''
         return empty_result
 
     def draw_lots(self, msg)-> tuple:
