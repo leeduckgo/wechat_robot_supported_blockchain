@@ -260,15 +260,23 @@ class Replier(object):
         if self.red_bag_num == 0: #如果红包剩余数量为 0
             self.answer = "" # answer清零
         else:
-            if self.answer == real_msg[len(real_msg) - 1] and msg.is_at:
+            print(self.answer)
+            if self.answer == real_msg[1] and msg.is_at:
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
-                result = self.user.transfer(bot_id, user_puid, self,group.puid, 1, self.api_key)
+                print("=====")
+                print(bot_id)
+                print(user_puid)
+                print(self.group.puid)
+                print(self.api_key)
+                print("=====")
+                result = self.user.transfer(bot_id, user_puid, self.group.puid, 3, self.api_key)
                 self.red_bag_num -=1
-                if result["status"] == "success":
-                    return 'text'," 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
-                else:
-                    return 'text','红包领完啦！',''
+                return 'text','红包拿好!',''
+                # if result["status"] == "success":
+                #     return 'text'," 口令正确！奖励 1 个超越积分！", ''
+                # else:
+                #     return 'text','红包领完啦！',''
         return empty_result
 
     def draw_lots(self, msg)-> tuple:
@@ -415,7 +423,7 @@ class Replier(object):
                     
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
-            payload = "https://ke.qq.com/course/392391?tuin=ce503a40 ⬅ 欢迎猛戳链接投票"
+            payload = "https://ke.qq.com/cates/ccyy/index.html?act_id=1&work_id=29&mmticket= ⬅ 欢迎猛戳链接投票"
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1].find("笑话") != -1:
             payload = choice(self.jokes)

@@ -22,10 +22,10 @@ replier = Replier(bot)
 if __name__ == '__main__':
     @bot.register()
     def reply_message(msg):
-        logger.info(msg.sender)
+        # logger.info(msg.sender)
         """消息回复"""
         if type(msg.sender) == Group:  # 所有群组消息
-            if msg.sender.puid in ["1f423133", "4193b4db"]:  # 限定群组
+            if msg.sender.puid in ["20ed458a", "dc8c27cb"]:  # 限定群组
                 logger.info("=== start ===")
                 replier.set_group(msg.sender.puid) # 获取群信息
                 logger.info(msg.member.puid)
