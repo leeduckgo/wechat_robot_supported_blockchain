@@ -37,7 +37,8 @@ if __name__ == '__main__':
                 elif typ == 'img':
                     msg.reply_image(content1)
                 elif typ == 'both':
-                    msg.reply_image(content1)
+                    # msg.reply_image(content1)
+                    msg.sender.send_image(content1)
                     sleep(1)
                     msg.reply_msg(content2)
         # else:  # todo 私聊消息

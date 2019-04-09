@@ -484,7 +484,7 @@ class Replier(object):
                         from_puid = bot_id
                         print(from_puid)
                         to_puid = user_puid
-                        result = self.user.transfer(from_puid, to_puid,self,group.puid, 3, self.api_key)
+                        result = self.user.transfer(from_puid, to_puid, self.group.puid, 3, self.api_key)
                         if result["status"] == "success":
                             payload = " 奖励给 " + msg.member.name + " 3 个超越积分！"
                         else:
@@ -492,7 +492,7 @@ class Replier(object):
                     elif "你输了" in content2:
                         from_puid = user_puid
                         to_puid = bot_id
-                        result = self.user.transfer(from_puid, to_puid, self,group.puid, 3, self.api_key)
+                        result = self.user.transfer(from_puid, to_puid, self.group.puid, 3, self.api_key)
                         if result["status"] == "success":
                             payload = " 扣除 " + msg.member.name + " 3 个超越积分！"
                         else:
