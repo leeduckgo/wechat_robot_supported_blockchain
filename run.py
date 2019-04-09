@@ -26,8 +26,8 @@ if __name__ == '__main__':
 
     @bot.register()
     def reply_message(msg):
-        logger.info(msg.sender)
         """消息回复"""
+        logger.info(msg.sender)
         if type(msg.sender) == Group:  # 所有群组消息
             if msg.sender.puid in ["1f423133", "4193b4db"]:  # 限定群组
                 logger.info("=== start ===")
