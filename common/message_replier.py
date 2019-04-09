@@ -9,6 +9,7 @@ from common.group import Group
 from common.logger import Logger
 from common.rock_scissors_paper import RspGame
 from common.user import User
+from common.real_estate import RealEstate
 from common.ycy_replier import YcyReplier
 from common.draw_lots import DrawLots
 from common.const import q_a_list
@@ -39,8 +40,8 @@ def extend_finger_guessing(func):
                 return typ, content1, content2
             user_puid = msg.member.puid
             bot_id = self.bot.self.puid
-            user_balance = self.user.get_balance_by_puid(user_puid, msg)
-            bot_balance = self.user.get_balance_by_puid(bot_id)
+            user_balance = self.user.get_balance_by_puid(user_puid, self.group.puid, msg)
+            bot_balance = self.user.get_balance_by_puid(bot_id, self.group.puid)
             if user_balance < 3:
                 payload = " 由于你余额不足 3 积分，所以本次游戏没有奖惩哦~"
             elif bot_balance < 3:
@@ -84,6 +85,7 @@ class Replier(object):
         self.rsp_game_player_map = {}
         self.bot = bot
         self.draw_lots_game = DrawLots()
+        self.real_estate = RealEstate()
         self.user_lots_map = {}
         self.user_lots_read_map = {}
         self.answer = ""
@@ -190,7 +192,7 @@ class Replier(object):
             )
             if status == "ok":
                 return 'text', '@' + msg.member.name + ' ' + "留言成功！点击 {} 可查看你的留言".format(
-                    'http://ycy.ahasmarter.com/',
+                    'http://ahasmarter.com/',
                 ), ''
             else:
                 return 'text', '@' + msg.member.name + ' ' + "留言失败！稍后再尝试吧", ''
@@ -226,51 +228,6 @@ class Replier(object):
         else:
             return empty_result
 
-    # def play_game(self, msg)-> tuple:
-    #     """
-    #     游戏
-    #     :param msg:
-    #     :return:
-    #     """
-    #     if "超越猜拳" in msg.text:
-    #         return "text", "@我并回复你的出招(比如「剪刀」)就能跟我玩猜拳游戏，赢了我会奖励3积分，输了扣除3积分，如果积分不够则不会进行奖惩", ""
-    #     real_msg = msg.text.split()
-    #     if "石头" in real_msg[len(real_msg) - 1] or "剪刀" in real_msg[len(real_msg) - 1]  \
-    #             or "布" in real_msg[len(real_msg) - 1]:
-    #         game = RspGame(1)
-    #         game.start(msg.member.name)
-    #         cancel, result, pic = game.play(msg)
-    #         return 'both', pic, result
-    #     else:
-    #         return empty_result
-    #     """
-    #     group_id = msg.member.group.puid
-    #     user_id = msg.member.puid
-    #     player_map = self.rsp_game_player_map
-    #     self.log.debug(player_map)
-    #     # 如果字典中包含群组id并且 玩家id在字典中
-    #     if player_map.get(group_id):
-    #         is_overtime = now_to_datetime4() > two_minutes_later(player_map[group_id][2])
-    #         self.log.debug('游戏是否超时:%s' % is_overtime)
-    #         if is_overtime:
-    #             msg = '@' + str(player_map[group_id][3]) + ' 游戏已经超时自动终止了呀!'
-    #             msg.chat.send_msg(msg)
-    #             player_map.pop(group_id)  # 超时删除群组id对应的字典
-    #     if player_map.get(group_id):  # 超时可能会pop掉该key,需要重新判断
-    #         if user_id not in player_map.get(group_id, []):  # 不是玩家的消息，不进行回应
-    #             return 'text', '@' + msg.member.name + " 先等等哦，我正在跟@" + \
-    #                    player_map[group_id][3] + " 玩石头剪刀布", ''
-    #         else:
-    #             cancel, result, pic = player_map[group_id][1].play(msg)  # 玩游戏
-    #             self.log.debug('game result:{} pic:{}'.format(result, pic))
-    #             if cancel == 1:
-    #                 player_map.pop(group_id)  # 如果游戏结束, 删除群组id对应的字典
-    #             return 'both', pic, result
-    #     typ, content1, content2 = self.finger_guessing_game(msg)  # 猜拳游戏
-    #     if typ == 'text':
-    #         return typ, content1, content2
-    #     return empty_result"""
-
     def red_bag(self, msg) -> tuple:
         """
         口令红包
@@ -287,8 +244,8 @@ class Replier(object):
             if self.answer == real_msg[len(real_msg) - 1] and msg.is_at:
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
-                result = self.user.transfer(bot_id, user_puid, 1, self.api_key)
-                self.red_bag_num -= 1
+                result = self.user.transfer(bot_id, user_puid, self,group.puid, 1, self.api_key)
+                self.red_bag_num -=1
                 if result["status"] == "success":
                     return 'text', " 口令正确！奖励给 " + msg.member.name + " 1 个超越积分！", ''
                 else:
@@ -334,7 +291,7 @@ class Replier(object):
             self.log.debug(from_puid)
             self.log.debug(to.puid)
             result = self.user.transfer(
-                from_puid, to.puid, int(
+                from_puid, to.puid, self.group.puid, int(
                     str_after_dashang[1],
                 ), self.api_key,
             )
@@ -359,17 +316,69 @@ class Replier(object):
             user_puid = msg.member.puid
             self.log.debug("想拿余额的puid:")
             self.log.debug(user_puid)
-            balance = self.user.get_balance_by_puid(user_puid, msg)
+            balance = self.user.get_balance_by_puid(user_puid, self.group.puid, msg)
             msg = "你有" + str(balance) + "超越积分"
             return 'text', msg, ''
         if real_msg[len(real_msg) - 1] == "等级":
             user_puid = msg.member.puid
-            level = self.user.get_level_by_puid(user_puid, msg)
+            level = self.user.get_level_by_puid(user_puid, self.group.puid, msg)
             msg = "你现在是" + str(level) + "级: " + level_map[int(level)]
             return 'text', msg, ''
         return empty_result
 
-    def extra(self, msg) -> tuple:
+    def houses(self, msg)-> tuple:
+        """
+        房产相关
+        :return:
+        """
+        real_msg = msg.text.split()
+        try:
+            if "超越买房" in msg.text:
+                return "text", "超越买房是实验性功能，@我并回复「看房」查看目前「超越大陆」上的房产所有者\n\n"+\
+                    "@我并回复「买房 房产名 价格」可以进行房产购买，例如「@全村的希望 买房 火炉堡 30」\n"+\
+                        "注意！！！你出的价格至少要比当前的价格大 1，才能买房成功 \n" +\
+                        "如果你是房产所有者，@我并回复「房产名 签名：「你要签名的内容」」可进行签名，例如「@全村的希望 火炉堡 签名：靓仔」", ""
+            if real_msg[len(real_msg) - 1] == "看房":
+                self.log.debug("=== 看房ing ===")
+                msg = self.real_estate.look()
+                return 'text', msg, ''
+            elif re.search(r'(签名:|签名：)(.*)', msg.text):
+                self.log.debug("=== 签名ing ===")
+                house_name = real_msg[1]
+                self.log.debug(msg.text)
+                signature = msg.text[msg.text.find("签名")+3:]
+                self.log.debug(house_name)
+                self.log.debug(self.api_key)
+                self.log.debug(msg.member.puid)
+                self.log.debug(self.group.puid)
+                self.log.debug(signature)
+                res = self.real_estate.leave_sig(msg.member.puid, self.group.puid, signature, house_name, self.api_key)
+                self.log.debug(res)
+                if res["result"] == "success":
+                    payload = "你在" + house_name + "上留下了你的签名：" + signature
+                    return 'text', payload, ''
+                else:
+                    payload = "签名失败！"
+                    return 'text', payload, ''
+            elif real_msg[1] == "买房":
+                self.log.debug("=== 买房ing ===")
+                house_name = real_msg[2]
+                amount = int(real_msg[3])
+                self.log.debug(house_name)
+                self.log.debug(amount)
+                res = self.real_estate.buy_house(msg.member.puid, self.group.puid, house_name, amount, self.api_key)
+                if res["result"] == "success":
+                    payload = "买房成功！\n你现在是 " + house_name + " 的领主！"
+                    return 'text', payload, ''
+                else:
+                    payload = "买房失败！"
+                    return 'text', payload, ''
+
+            return empty_result
+        except:
+            return empty_result
+
+    def extra(self, msg)-> tuple:
         """
         额外添加
         :param msg:
@@ -380,13 +389,14 @@ class Replier(object):
             return 'text', "感谢「心理医生聪」与「禹sen」，提供超越语录的支持！", ''
         if real_msg[len(real_msg) - 1] in ["帮助", "?", "？"]:
             payload = "本 AI 目前支持以下功能: \n" + \
-                      "- 超越积分\n" + \
-                      "- 天降超越\n" + \
-                      "- 超越猜拳\n" + \
-                      "- 村头留言板\n" + \
-                      "- 超越抽签\n" + \
-                      "- 超越接龙\n" + \
-                      "- 口令红包（管理员功能）"
+                        "- 超越积分\n" + \
+                        "- 天降超越\n" + \
+                        "- 超越猜拳\n" + \
+                        "- 村头留言板\n" + \
+                        "- 超越抽签\n" + \
+                        "- 超越接龙\n" + \
+                        "- 口令红包（管理员功能）\n" + \
+                        "- 超越买房"
 
             return 'text', payload, ''
         if real_msg[len(real_msg) - 1] == "投票":
@@ -441,6 +451,7 @@ class Replier(object):
             self.get_group_introduction,  # 群组简介
             self.integral,  # 超越积分
             self.extra,  # 额外信息
+            self.houses,
         ]
         return funcs
 

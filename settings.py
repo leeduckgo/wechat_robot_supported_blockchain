@@ -7,4 +7,5 @@ DRAW_LOTS_WORDS_PATH = os.path.join(PROJECT_PATH, 'resources', 'text', 'draw_lot
 LOG_DIRECTORY = os.path.join(PROJECT_PATH, 'log')
 LOG_LEVEL = 'DEBUG'
 GROUP1 = '测试'
+ALLOW_GROUPS = ["1f423133", "4193b4db"]
 

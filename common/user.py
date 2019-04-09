@@ -6,15 +6,15 @@ class User(object):
     def __init__(self):
         self.requester = Requester("http://ahasmarter.com/api/v1/ycy/")
 
-    def get_balance_by_puid(self, puid=None, msg=None):
-        user = self.requester.get("users/" + puid)
+    def get_balance_by_puid(self, puid, group_puid, msg=None):
+        user = self.requester.get("users/" + puid +"?group_id=" + group_puid)
         if user.get('result') == 'no_exist':
             self.update_users(msg)
             user["balance"] = 0
         return user["balance"]
 
-    def get_level_by_puid(self, puid=None, msg=None):
-        user = self.requester.get("users/" + puid)
+    def get_level_by_puid(self, puid, group_puid, msg=None):
+        user = self.requester.get("users/" + puid + "?group_id=" + group_puid)
         if user.get('result') == 'no_exist':
             self.update_users(msg)
             user["level"] = 1
@@ -25,11 +25,12 @@ class User(object):
             if name in member.name:
                 return member
 
-    def transfer(self, from_puid, to_puid, amount, api_key):
+    def transfer(self, from_puid, to_puid, group_puid, amount, api_key):
         payload = {
             "from": from_puid,
             "to": to_puid,
             "amount": amount,
+            "group_id": group_puid
         }
         return self.requester.post("users/transfer?api=" + api_key, payload)
 
@@ -43,7 +44,7 @@ class User(object):
                 "name": member.name,
                 "puid": member.puid,
                 "level": 1,
-                "balance": 0,
+                "balance": 20,
             }
             users.append(user)
         payload = {"group": group.puid, "users": users}
