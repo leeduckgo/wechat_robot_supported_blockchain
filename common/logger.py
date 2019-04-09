@@ -50,8 +50,9 @@ class Logger(logging.Logger):
         ch.setFormatter(formatter)
 
         # 给logger添加handler
-        self.addHandler(fh)
-        self.addHandler(ch)
+        # self.addHandler(fh)
+        self.addHandler(ch)  # 输出控制台,日志文件生成交由supervisor完成
+
 
 
 if __name__ == '__main__':
