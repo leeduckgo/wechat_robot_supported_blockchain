@@ -82,7 +82,6 @@ class Replier(object):
         self.tuling = Tuling(api_key=TULING_KEY)
         self.user = User()
         self.group = Group()
-        self.rsp_game_player_map = {}
         self.bot = bot
         self.draw_lots_game = DrawLots()
         self.real_estate = RealEstate()
@@ -241,7 +240,7 @@ class Replier(object):
         if self.red_bag_num == 0:  # 如果红包剩余数量为0
             self.answer = ""  # answer清零
         else:
-            print(self.answer)
+            self.log.debug(self.answer)
             if self.answer == real_msg[1] and msg.is_at:
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
