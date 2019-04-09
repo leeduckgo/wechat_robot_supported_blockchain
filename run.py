@@ -25,22 +25,22 @@ if __name__ == '__main__':
         # logger.info(msg.sender)
         """消息回复"""
         if type(msg.sender) == Group:  # 所有群组消息
-            if msg.sender.puid in ["20ed458a", "dc8c27cb"]:  # 限定群组
-                logger.info("=== start ===")
-                replier.set_group(msg.sender.puid) # 获取群信息
-                logger.info(msg.member.puid)
-                if msg.type == "Note":
-                    replier.update_user_info(msg)
-                typ, content1, content2 = replier.handle_group_msg(msg)
-                if typ == 'text':
-                    msg.reply_msg(content1)
-                elif typ == 'img':
-                    msg.reply_image(content1)
-                elif typ == 'both':
-                    # msg.reply_image(content1)
-                    msg.sender.send_image(content1)
-                    sleep(1)
-                    msg.reply_msg(content2)
+            #if msg.sender.puid in ["738c9fdb","20ed458a", "dc8c27cb"]:  # 限定群组
+            logger.info("=== start ===")
+            replier.set_group(msg.sender.puid) # 获取群信息
+            logger.info(msg.member.puid)
+            if msg.type == "Note":
+                replier.update_user_info(msg)
+            typ, content1, content2 = replier.handle_group_msg(msg)
+            if typ == 'text':
+                msg.reply_msg(content1)
+            elif typ == 'img':
+                msg.reply_image(content1)
+            elif typ == 'both':
+                # msg.reply_image(content1)
+                msg.sender.send_image(content1)
+                sleep(1)
+                msg.reply_msg(content2)
         # else:  # todo 私聊消息
         #     replier.handle_solo_msg(msg)
         #     logger.info(msg)
