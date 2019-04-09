@@ -264,12 +264,6 @@ class Replier(object):
             if self.answer == real_msg[1] and msg.is_at:
                 user_puid = msg.member.puid
                 bot_id = self.bot.self.puid
-                print("=====")
-                print(bot_id)
-                print(user_puid)
-                print(self.group.puid)
-                print(self.api_key)
-                print("=====")
                 result = self.user.transfer(bot_id, user_puid, self.group.puid, 3, self.api_key)
                 self.red_bag_num -=1
                 if result["status"] == "success":
