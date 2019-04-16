@@ -21,6 +21,18 @@ YCY Token is kind of credit you can use in our platform. With the development of
 
 ## Features
 
+** v1.0.0 功能 **
+
+- 智能语聊
+- 超越积分
+- 口令红包
+- 群等级及成员等级
+- 每日一签
+- 虚拟房产
+- 天降超越（随机发图）
+- 超越猜拳
+
+===
 - Random WX reply ([wf1314](https://github.com/wf1314)✅)
 - Http communication supported ([albertschr](https://github.com/albertschr) ✅)
 - Smart chat ([DawnSunshine](https://github.com/DawnSunshine))✅)
