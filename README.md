@@ -21,7 +21,7 @@ YCY Token is kind of credit you can use in our platform. With the development of
 
 ## Features
 
-** v1.0.0 功能 **
+**v1.0.0 功能**
 
 - 智能语聊
 - 超越积分
@@ -31,6 +31,7 @@ YCY Token is kind of credit you can use in our platform. With the development of
 - 虚拟房产
 - 天降超越（随机发图）
 - 超越猜拳
+- 村头留言板
 
 ===
 - Random WX reply ([wf1314](https://github.com/wf1314)✅)
